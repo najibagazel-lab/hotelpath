@@ -255,7 +255,7 @@
                     <h1>Login</h1>
                     <p class="form-intro">Access your hotel contract workspace.</p>
 
-                    <form method="POST" action="{{ route('login.store') }}" novalidate>
+                    <form method="POST" action="/connexion" novalidate>
                         @csrf
 
                         @error('username')

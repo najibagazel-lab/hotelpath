@@ -2,7 +2,7 @@ FROM php:8.2-cli-alpine
 
 WORKDIR /var/www/html
 
-RUN apk add --no-cache git unzip libzip-dev nodejs npm \
+RUN apk add --no-cache git unzip libzip-dev postgresql-dev nodejs npm \
     && docker-php-ext-install pdo_pgsql pdo_sqlite zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

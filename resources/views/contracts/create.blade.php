@@ -1,0 +1,8 @@
+@extends('layouts.app')
+@section('content')
+<header><div><h1>Add hotel</h1></div><a href="{{ route('tasks.index') }}" class="back">← Back</a></header>
+<form class="panel form" method="POST" action="{{ route('contracts.store') }}">@csrf
+<div class="form-grid"><label>Existing hotel<select name="hotel_id"><option value="">Select an existing hotel (optional)</option>@foreach($hotels as $hotel)<option value="{{ $hotel->id }}">{{ $hotel->name }}</option>@endforeach</select></label><label>New hotel name<input name="hotel_name" placeholder="e.g. Iberostar Selection" value="{{ old('hotel_name') }}"></label><div class="season-inputs"><label>Season</label><div class="season-control"><div id="season-fields"><select name="season_names[]" required><option value="">Select season</option>@foreach($seasons as $season)<option value="{{ $season->name }}">{{ $season->name }}</option>@endforeach</select></div><button type="button" id="add-season" class="add-season" title="Add a new season">+</button></div><small>Click + only to add a new season that is not in the list.</small></div><label>Received date<input name="received_date" type="date" value="{{ now()->format('Y-m-d') }}" required></label></div><button class="button" type="submit">Add hotel</button>
+</form>
+@endsection
+@push('scripts')<script>document.getElementById('add-season').addEventListener('click',()=>{const value=window.prompt('New season name (example: Winter 2028/2029)');if(!value||!value.trim())return;const fields=document.getElementById('season-fields');const option=document.createElement('option');option.value=value.trim();option.textContent=value.trim();option.selected=true;fields.querySelector('select').appendChild(option)});</script>@endpush

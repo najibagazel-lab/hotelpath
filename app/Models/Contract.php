@@ -1,0 +1,4 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+class Contract extends Model { protected $fillable=['hotel_id','season_id','created_by','contracting_user_id','received_date','contracting_checked_at','start_date','end_date','purchase_contract_received','notes']; protected $casts=['received_date'=>'date','contracting_checked_at'=>'datetime','start_date'=>'date','end_date'=>'date','purchase_contract_received'=>'boolean']; public function hotel(){return $this->belongsTo(Hotel::class);} public function season(){return $this->belongsTo(Season::class);} public function tasks(){return $this->hasMany(ContractTask::class);} public function creator(){return $this->belongsTo(User::class,'created_by');} public function contractingUser(){return $this->belongsTo(User::class,'contracting_user_id');} }

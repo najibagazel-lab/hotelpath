@@ -1,0 +1,4 @@
+@extends('layouts.app')
+@section('content')
+<div class="employee-page"><div class="employee-intro"><div><p class="eyebrow">ARCHIVED WORK</p><h1>History</h1></div></div><section class="employee-board history-board"><table><thead><tr><th>Hotel</th><th>Season</th>@foreach($platforms as $platform)<th>{{ $platform->name }}</th>@endforeach</tr></thead><tbody>@forelse($contracts as $contract)<tr><td>{{ $contract->hotel->name }}</td><td>{{ $contract->season->name }}</td>@foreach($platforms as $platform)@php($task=$contract->tasks->firstWhere('platform_id',$platform->id))<td class="employee-check"><span class="matrix-check locked {{ $task?->status === 'COMPLETED' ? 'checked' : '' }}">{{ $task?->status === 'COMPLETED' ? '✓' : '' }}</span></td>@endforeach</tr>@empty<tr><td colspan="20" class="empty">No archived seasons yet.</td></tr>@endforelse</tbody></table></section></div>
+@endsection

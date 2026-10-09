@@ -1,0 +1,370 @@
+<svg width="1060" height="900" viewBox="0 0 1060 900" style="position: absolute; left: 0; top: 0; font-family: Nunito, sans-serif" role="img" aria-label="Illustration: a hotel and an agent tracking hotel contract entry from receipt to Sejour and TO platforms">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D3E3EC"></stop>
+      <stop offset="0.7" stop-color="#EAF1F6"></stop>
+      <stop offset="1" stop-color="#F3F6FA"></stop>
+    </linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"></stop>
+      <stop offset="1" stop-color="#E3EEF4"></stop>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.62"></stop>
+      <stop offset="1" stop-color="#E6F3EE" stop-opacity="0.42"></stop>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.9"></stop>
+      <stop offset="1" stop-color="#EEF6F3" stop-opacity="0.8"></stop>
+    </linearGradient>
+    <radialGradient id="robotW" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#FFFFFF"></stop>
+      <stop offset="0.6" stop-color="#E8EEF1"></stop>
+      <stop offset="1" stop-color="#B9C7CE"></stop>
+    </radialGradient>
+    <radialGradient id="face" cx="0.5" cy="0.4" r="0.7">
+      <stop offset="0" stop-color="#FFFFFF"></stop>
+      <stop offset="1" stop-color="#DCE7EB"></stop>
+    </radialGradient>
+    <radialGradient id="core" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF"></stop>
+      <stop offset="0.45" stop-color="#8FF0D6"></stop>
+      <stop offset="1" stop-color="#2DBE9E" stop-opacity="0"></stop>
+    </radialGradient>
+    <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FDFEFE"></stop>
+      <stop offset="1" stop-color="#E3ECEE"></stop>
+    </linearGradient>
+    <linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C9DAE8"></stop>
+      <stop offset="1" stop-color="#93AFC6"></stop>
+    </linearGradient>
+    <linearGradient id="hair" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3A2C33"></stop>
+      <stop offset="1" stop-color="#14101A"></stop>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"></feGaussianBlur></filter>
+    <filter id="blur3" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3"></feGaussianBlur></filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#13243D" flood-opacity="0.18"></feDropShadow></filter>
+  </defs>
+
+  <!-- ===== room ===== -->
+  <rect width="1060" height="900" fill="url(#wall)"></rect>
+  <!-- window -->
+  <g filter="url(#blur3)">
+    <rect x="770" y="40" width="300" height="540" fill="url(#win)"></rect>
+    <rect x="770" y="40" width="300" height="540" fill="none" stroke="#C9DAE4" stroke-width="8"></rect>
+    <line x1="870" y1="40" x2="870" y2="580" stroke="#C9DAE4" stroke-width="6"></line>
+    <line x1="970" y1="40" x2="970" y2="580" stroke="#C9DAE4" stroke-width="6"></line>
+    <line x1="770" y1="300" x2="1060" y2="300" stroke="#C9DAE4" stroke-width="6"></line>
+    <!-- palm silhouettes outside -->
+    <path d="M920 580 C 925 470, 930 420, 945 380" stroke="#9FD3C8" stroke-width="7" fill="none"></path>
+    <path d="M945 380 C 905 370, 885 385, 870 405 M945 380 C 975 360, 1005 368, 1020 390 M945 380 C 940 345, 955 330, 975 322 M945 380 C 915 345, 895 345, 880 352" stroke="#9FD3C8" stroke-width="9" fill="none" stroke-linecap="round"></path>
+  </g>
+  <!-- wall shelf left with blurred icons -->
+  <g filter="url(#blur3)" opacity="0.85">
+    <rect x="-20" y="150" width="120" height="300" rx="14" fill="#DCE8EF"></rect>
+    <rect x="10" y="180" width="62" height="62" rx="14" fill="#7FC7EE"></rect>
+    <rect x="10" y="262" width="62" height="62" rx="14" fill="#F4C76B"></rect>
+    <rect x="10" y="344" width="62" height="62" rx="14" fill="#7DD3A8"></rect>
+  </g>
+  <!-- floating soft icon tiles near window -->
+  <g filter="url(#blur3)" opacity="0.9">
+    <rect x="905" y="150" width="58" height="58" rx="14" fill="#2DBE9E"></rect>
+    <path d="M920 190 v-10 M933 190 v-18 M946 190 v-13" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path>
+  </g>
+
+  <!-- holographic glow behind panel -->
+  <rect x="150" y="105" width="740" height="480" rx="34" fill="#8FE3CC" opacity="0.35" filter="url(#soft)"></rect>
+
+  <!-- ===== GLASS PANEL ===== -->
+  <rect x="140" y="120" width="760" height="460" rx="30" fill="url(#glass)" stroke="#A7E3D3" stroke-width="2.5"></rect>
+  <rect x="148" y="128" width="744" height="444" rx="24" fill="none" stroke="#FFFFFF" stroke-opacity="0.7" stroke-width="1.5"></rect>
+
+  <!-- speech bubble -->
+  <g filter="url(#shadow)">
+    <rect x="232" y="64" width="576" height="58" rx="29" fill="#FFFFFF" fill-opacity="0.95" stroke="#A7E3D3" stroke-width="2"></rect>
+  </g>
+  <circle cx="266" cy="93" r="16" fill="#FFE2A6"></circle>
+  <path d="M259 93 l5 5 9-10" fill="none" stroke="#C47F07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+  <text x="292" y="100" font-size="20" font-weight="800" fill="#13243D">Hello! I track every hotel contract, from receipt to entry.</text>
+
+  <!-- panel title -->
+  <text x="520" y="168" text-anchor="middle" font-size="21" font-weight="900" fill="#13243D" letter-spacing="0.8">HOTEL CONTRACT ENTRY TRACKING Â· SEJOUR + TO</text>
+
+  <!-- === 4 stage cards === -->
+  <!-- 1 receipt -->
+  <g filter="url(#shadow)"><rect x="172" y="190" width="160" height="140" rx="18" fill="url(#card)" stroke="#B5E6D8" stroke-width="2"></rect></g>
+  <text x="252" y="216" text-anchor="middle" font-size="15" font-weight="800" fill="#13243D">Contract receipt</text>
+  <rect x="190" y="230" width="38" height="48" rx="5" fill="#FFFFFF" stroke="#2F5E9E" stroke-width="2"></rect>
+  <rect x="190" y="262" width="38" height="16" rx="3" fill="#2F5E9E"></rect>
+  <text x="209" y="274" text-anchor="middle" font-size="8" font-weight="900" fill="#FFFFFF">WINTER</text>
+  <rect x="234" y="230" width="38" height="48" rx="5" fill="#FFFFFF" stroke="#A63D3A" stroke-width="2"></rect>
+  <rect x="234" y="262" width="38" height="16" rx="3" fill="#A63D3A"></rect>
+  <text x="253" y="274" text-anchor="middle" font-size="8" font-weight="900" fill="#FFFFFF">SUMMER</text>
+  <rect x="278" y="230" width="38" height="48" rx="5" fill="#FFFFFF" stroke="#1B7A6B" stroke-width="2"></rect>
+  <rect x="278" y="262" width="38" height="16" rx="3" fill="#1B7A6B"></rect>
+  <text x="297" y="274" text-anchor="middle" font-size="8" font-weight="900" fill="#FFFFFF">YEAR</text>
+  <path d="M197 240h24M197 247h18M241 240h24M241 247h18M285 240h24M285 247h18" stroke="#B8C8D0" stroke-width="2.5" stroke-linecap="round"></path>
+  <text x="252" y="310" text-anchor="middle" font-size="12" font-weight="700" fill="#5F6F86">Purchase contracts</text>
+
+  <!-- arrow -->
+  <path d="M336 260 h14" stroke="#2DBE9E" stroke-width="3" stroke-linecap="round"></path>
+  <path d="M346 254 l7 6 -7 6" fill="none" stroke="#2DBE9E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+
+  <!-- 2 sejour -->
+  <g filter="url(#shadow)"><rect x="358" y="190" width="160" height="140" rx="18" fill="url(#card)" stroke="#B5E6D8" stroke-width="2"></rect></g>
+  <text x="438" y="216" text-anchor="middle" font-size="15" font-weight="800" fill="#13243D">Sejour entry</text>
+  <rect x="380" y="228" width="116" height="62" rx="6" fill="#13243D"></rect>
+  <path d="M388 240h40M388 252h60M388 264h50M388 276h34" stroke="#3DDBB0" stroke-width="3" stroke-linecap="round"></path>
+  <circle cx="478" cy="270" r="11" fill="#2DBE9E"></circle>
+  <path d="M473 270 l4 4 7-8" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <text x="438" y="314" text-anchor="middle" font-size="13" font-weight="800" fill="#5F6F86">100 â‚¬ â†’ <tspan fill="#C47F07">101 â‚¬</tspan></text>
+
+  <path d="M522 260 h14" stroke="#2DBE9E" stroke-width="3" stroke-linecap="round"></path>
+  <path d="M532 254 l7 6 -7 6" fill="none" stroke="#2DBE9E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+
+  <!-- 3 TO platforms -->
+  <g filter="url(#shadow)"><rect x="544" y="190" width="160" height="140" rx="18" fill="url(#card)" stroke="#B5E6D8" stroke-width="2"></rect></g>
+  <text x="624" y="216" text-anchor="middle" font-size="15" font-weight="800" fill="#13243D">TO platforms</text>
+  <g font-size="9" font-weight="900" text-anchor="middle">
+    <rect x="558" y="228" width="40" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="578" y="244" fill="#17704A">DNA</text>
+    <rect x="604" y="228" width="40" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="624" y="244" fill="#17704A">JMT</text>
+    <rect x="650" y="228" width="40" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="670" y="244" fill="#17704A">PEAK</text>
+    <rect x="558" y="258" width="40" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="578" y="274" fill="#17704A">SUN</text>
+    <rect x="604" y="258" width="40" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="624" y="274" fill="#17704A">SQ</text>
+    <rect x="650" y="258" width="40" height="24" rx="6" fill="#FFF1D9" stroke="#E9B44C"></rect><text x="670" y="274" fill="#94600E">PAXIM</text>
+    <rect x="558" y="288" width="63" height="24" rx="6" fill="#FFFFFF" stroke="#C3D2D8"></rect><text x="589" y="304" fill="#5F6F86">HEY TRIP</text>
+    <rect x="627" y="288" width="63" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="658" y="304" fill="#17704A">AURUM</text>
+  </g>
+
+  <path d="M708 260 h14" stroke="#2DBE9E" stroke-width="3" stroke-linecap="round"></path>
+  <path d="M718 254 l7 6 -7 6" fill="none" stroke="#2DBE9E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+
+  <!-- 4 progress -->
+  <g filter="url(#shadow)"><rect x="730" y="190" width="150" height="140" rx="18" fill="url(#card)" stroke="#B5E6D8" stroke-width="2"></rect></g>
+  <text x="805" y="216" text-anchor="middle" font-size="15" font-weight="800" fill="#13243D">Progress</text>
+  <circle cx="805" cy="270" r="36" fill="none" stroke="#E3EBF0" stroke-width="11"></circle>
+  <circle cx="805" cy="270" r="36" fill="none" stroke="#2DBE9E" stroke-width="11" stroke-linecap="round" stroke-dasharray="163 226" transform="rotate(-90 805 270)"></circle>
+  <text x="805" y="277" text-anchor="middle" font-size="19" font-weight="900" fill="#13243D">72%</text>
+  <text x="805" y="322" text-anchor="middle" font-size="11" font-weight="700" fill="#5F6F86">430 / 600 entered</text>
+
+  <!-- lower-left: hotel checklist -->
+  <g filter="url(#shadow)"><rect x="172" y="352" width="272" height="206" rx="18" fill="url(#card)" stroke="#B5E6D8" stroke-width="2"></rect></g>
+  <text x="192" y="380" font-size="14" font-weight="900" fill="#13243D">Hotels</text>
+  <text x="352" y="380" text-anchor="middle" font-size="11" font-weight="900" fill="#2F5E9E">W</text>
+  <text x="396" y="380" text-anchor="middle" font-size="11" font-weight="900" fill="#A63D3A">S</text>
+  <text x="192" y="410" font-size="13" font-weight="700" fill="#1B2B44">El Ksar Resort &amp; Spa</text>
+  <rect x="343" y="396" width="18" height="18" rx="5" fill="#2DBE9E"></rect><path d="M347 405 l3.5 3.5 6.5-7" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <rect x="387" y="396" width="18" height="18" rx="5" fill="#2DBE9E"></rect><path d="M391 405 l3.5 3.5 6.5-7" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <text x="192" y="442" font-size="13" font-weight="700" fill="#1B2B44">Le petit palais</text>
+  <rect x="343" y="428" width="18" height="18" rx="5" fill="#2DBE9E"></rect><path d="M347 437 l3.5 3.5 6.5-7" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <rect x="387" y="428" width="18" height="18" rx="5" fill="#FFFFFF" stroke="#AFC2C8" stroke-width="1.5"></rect>
+  <text x="192" y="474" font-size="13" font-weight="700" fill="#1B2B44">Africa Jade Thalasso</text>
+  <rect x="343" y="460" width="18" height="18" rx="5" fill="#2DBE9E"></rect><path d="M347 469 l3.5 3.5 6.5-7" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <rect x="387" y="460" width="18" height="18" rx="5" fill="#2DBE9E"></rect><path d="M391 469 l3.5 3.5 6.5-7" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <text x="192" y="506" font-size="13" font-weight="700" fill="#1B2B44">AlHambra Thalasso</text>
+  <rect x="343" y="492" width="18" height="18" rx="5" fill="#2DBE9E"></rect><path d="M347 501 l3.5 3.5 6.5-7" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <rect x="387" y="492" width="18" height="18" rx="5" fill="#2DBE9E"></rect><path d="M391 501 l3.5 3.5 6.5-7" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <text x="192" y="538" font-size="13" font-weight="700" fill="#1B2B44">Riadh Palms</text>
+  <rect x="343" y="524" width="18" height="18" rx="5" fill="#FFFFFF" stroke="#AFC2C8" stroke-width="1.5"></rect>
+  <rect x="387" y="524" width="18" height="18" rx="5" fill="#FFFFFF" stroke="#AFC2C8" stroke-width="1.5"></rect>
+
+  <!-- lower-right: season bars -->
+  <g filter="url(#shadow)"><rect x="660" y="352" width="220" height="206" rx="18" fill="url(#card)" stroke="#B5E6D8" stroke-width="2"></rect></g>
+  <text x="680" y="380" font-size="14" font-weight="900" fill="#13243D">By season</text>
+  <text x="680" y="410" font-size="12" font-weight="800" fill="#2F5E9E">Winter 26/27</text>
+  <text x="860" y="410" text-anchor="end" font-size="12" font-weight="900" fill="#13243D">93%</text>
+  <rect x="680" y="418" width="180" height="9" rx="4.5" fill="#E3EBF0"></rect>
+  <rect x="680" y="418" width="167" height="9" rx="4.5" fill="#2DBE9E"></rect>
+  <text x="680" y="452" font-size="12" font-weight="800" fill="#A63D3A">Summer 27</text>
+  <text x="860" y="452" text-anchor="end" font-size="12" font-weight="900" fill="#13243D">78%</text>
+  <rect x="680" y="460" width="180" height="9" rx="4.5" fill="#E3EBF0"></rect>
+  <rect x="680" y="460" width="140" height="9" rx="4.5" fill="#2DBE9E"></rect>
+  <text x="680" y="494" font-size="12" font-weight="800" fill="#1B7A6B">Year contracts</text>
+  <text x="860" y="494" text-anchor="end" font-size="12" font-weight="900" fill="#13243D">37</text>
+  <text x="680" y="530" font-size="11" font-weight="700" fill="#5F6F86">Today: 18 Â· This week: 92</text>
+
+  <!-- ===== DESK ===== -->
+  <path d="M0 700 L1060 680 L1060 900 L0 900 Z" fill="url(#desk)"></path>
+  <path d="M0 700 L1060 680" stroke="#FFFFFF" stroke-width="3"></path>
+  <ellipse cx="540" cy="712" rx="130" ry="16" fill="#13243D" opacity="0.12"></ellipse>
+
+  <!-- ===== ROBOT ===== -->
+  <g class="rb-float" display="none">
+    <!-- light beam under -->
+    <ellipse cx="540" cy="690" rx="70" ry="10" fill="#8FE3CC" opacity="0.5" filter="url(#blur3)"></ellipse>
+    <!-- legs -->
+    <rect x="510" y="620" width="24" height="56" rx="12" fill="url(#robotW)" stroke="#B6C6CD"></rect>
+    <rect x="546" y="620" width="24" height="56" rx="12" fill="url(#robotW)" stroke="#B6C6CD"></rect>
+    <ellipse cx="522" cy="678" rx="18" ry="8" fill="#2A3A44"></ellipse>
+    <ellipse cx="558" cy="678" rx="18" ry="8" fill="#2A3A44"></ellipse>
+    <!-- left arm -->
+    <path d="M488 548 C 462 566, 458 598, 470 618" stroke="#C3D0D6" stroke-width="22" stroke-linecap="round" fill="none"></path>
+    <path d="M488 548 C 462 566, 458 598, 470 618" stroke="#F4F7F8" stroke-width="16" stroke-linecap="round" fill="none"></path>
+    <circle cx="471" cy="620" r="12" fill="#2A3A44"></circle>
+    <!-- body -->
+    <rect x="484" y="520" width="112" height="118" rx="44" fill="url(#robotW)" stroke="#B6C6CD" stroke-width="1.5"></rect>
+    <rect x="500" y="600" width="80" height="14" rx="7" fill="#24343E"></rect>
+    <circle cx="514" cy="607" r="3" fill="#6FF0CF" class="rb-glow"></circle>
+    <circle cx="528" cy="607" r="3" fill="#6FF0CF" class="rb-glow"></circle>
+    <circle cx="542" cy="607" r="3" fill="#FFC970"></circle>
+    <circle cx="556" cy="607" r="3" fill="#6FF0CF" class="rb-glow"></circle>
+    <circle cx="570" cy="607" r="3" fill="#6FF0CF" class="rb-glow"></circle>
+    <!-- chest core -->
+    <circle cx="540" cy="565" r="30" fill="url(#core)" class="rb-glow"></circle>
+    <circle cx="540" cy="565" r="15" fill="#E9FFFD" stroke="#3DDBB0" stroke-width="3"></circle>
+    <!-- right arm holding clipboard -->
+    <path d="M592 548 C 615 560, 622 578, 618 596" stroke="#C3D0D6" stroke-width="22" stroke-linecap="round" fill="none"></path>
+    <path d="M592 548 C 615 560, 622 578, 618 596" stroke="#F4F7F8" stroke-width="16" stroke-linecap="round" fill="none"></path>
+    <g transform="rotate(8 640 585)">
+      <rect x="604" y="534" width="74" height="96" rx="8" fill="#FFFFFF" stroke="#9FB4BC" stroke-width="2"></rect>
+      <rect x="628" y="528" width="26" height="12" rx="4" fill="#2A3A44"></rect>
+      <rect x="614" y="552" width="12" height="12" rx="3" fill="#2DBE9E"></rect>
+      <path d="M616.5 558 l2.5 2.5 4.5-5" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path>
+      <rect x="632" y="555" width="36" height="5" rx="2.5" fill="#C8D6DC"></rect>
+      <rect x="614" y="572" width="12" height="12" rx="3" fill="#2DBE9E"></rect>
+      <path d="M616.5 578 l2.5 2.5 4.5-5" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path>
+      <rect x="632" y="575" width="30" height="5" rx="2.5" fill="#C8D6DC"></rect>
+      <rect x="614" y="592" width="12" height="12" rx="3" fill="#FFFFFF" stroke="#9FB4BC" stroke-width="1.5"></rect>
+      <rect x="632" y="595" width="34" height="5" rx="2.5" fill="#C8D6DC"></rect>
+      <rect x="614" y="610" width="12" height="12" rx="3" fill="#2DBE9E"></rect>
+      <path d="M616.5 616 l2.5 2.5 4.5-5" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path>
+      <rect x="632" y="613" width="26" height="5" rx="2.5" fill="#C8D6DC"></rect>
+    </g>
+    <circle cx="616" cy="598" r="12" fill="#2A3A44"></circle>
+    <!-- neck -->
+    <rect x="522" y="506" width="36" height="20" rx="8" fill="#9FB1B9"></rect>
+    <!-- head -->
+    <ellipse cx="540" cy="452" rx="84" ry="70" fill="url(#robotW)" stroke="#B6C6CD" stroke-width="1.5"></ellipse>
+    <!-- ears -->
+    <circle cx="456" cy="456" r="20" fill="#E5ECEF" stroke="#B6C6CD"></circle>
+    <circle cx="456" cy="456" r="11" fill="#3DDBB0" class="rb-glow"></circle>
+    <circle cx="624" cy="456" r="20" fill="#E5ECEF" stroke="#B6C6CD"></circle>
+    <circle cx="624" cy="456" r="11" fill="#3DDBB0" class="rb-glow"></circle>
+    <!-- face plate -->
+    <rect x="478" y="420" width="124" height="80" rx="38" fill="url(#face)" stroke="#C9D6DB"></rect>
+    <!-- eyes -->
+    <ellipse cx="514" cy="456" rx="11" ry="13" fill="#1C2830"></ellipse>
+    <ellipse cx="566" cy="456" rx="11" ry="13" fill="#1C2830"></ellipse>
+    <circle cx="518" cy="451" r="4" fill="#FFFFFF"></circle>
+    <circle cx="570" cy="451" r="4" fill="#FFFFFF"></circle>
+    <!-- cheeks + smile -->
+    <ellipse cx="497" cy="478" rx="9" ry="5" fill="#FFB4B4" opacity="0.7"></ellipse>
+    <ellipse cx="583" cy="478" rx="9" ry="5" fill="#FFB4B4" opacity="0.7"></ellipse>
+    <path d="M526 480 Q 540 492, 554 480" fill="none" stroke="#1C2830" stroke-width="3.5" stroke-linecap="round"></path>
+    <!-- head shine -->
+    <ellipse cx="510" cy="400" rx="30" ry="10" fill="#FFFFFF" opacity="0.8" transform="rotate(-18 510 400)"></ellipse>
+  </g>
+
+  <!-- ===== HOTEL + CONTRACT CHECKLIST ===== -->
+  <g class="rb-float">
+    <ellipse cx="540" cy="712" rx="144" ry="16" fill="#13243D" opacity="0.12"></ellipse>
+    <!-- side wing -->
+    <rect x="430" y="555" width="74" height="135" rx="9" fill="#EAF1F6" stroke="#C9DCE4" stroke-width="2"></rect>
+    <rect x="442" y="572" width="16" height="18" rx="3" fill="#78BDE2"></rect>
+    <rect x="472" y="572" width="16" height="18" rx="3" fill="#78BDE2"></rect>
+    <rect x="442" y="602" width="16" height="18" rx="3" fill="#F7D47D"></rect>
+    <rect x="472" y="602" width="16" height="18" rx="3" fill="#78BDE2"></rect>
+    <rect x="442" y="632" width="16" height="18" rx="3" fill="#78BDE2"></rect>
+    <rect x="472" y="632" width="16" height="18" rx="3" fill="#F7D47D"></rect>
+    <!-- main white hotel tower -->
+    <rect x="495" y="465" width="130" height="230" rx="11" fill="#FFFFFF" stroke="#C9DCE4" stroke-width="2"></rect>
+    <path d="M495 490 h130" stroke="#E6EEF3" stroke-width="2"></path>
+    <!-- hotel sign with golden stars -->
+    <rect x="508" y="440" width="104" height="45" rx="10" fill="#13243D"></rect>
+    <text x="560" y="471" text-anchor="middle" font-size="16" font-weight="900" fill="#FFFFFF" letter-spacing="1">HOTEL</text>
+    <path d="M535 451 l3 6 7 1 -5 5 1 7 -6-3 -6 3 1-7 -5-5 7-1 z" fill="#F6BA47"></path>
+    <path d="M560 451 l3 6 7 1 -5 5 1 7 -6-3 -6 3 1-7 -5-5 7-1 z" fill="#F6BA47"></path>
+    <path d="M585 451 l3 6 7 1 -5 5 1 7 -6-3 -6 3 1-7 -5-5 7-1 z" fill="#F6BA47"></path>
+    <!-- lit windows -->
+    <g fill="#78BDE2"><rect x="515" y="510" width="18" height="20" rx="3"></rect><rect x="551" y="510" width="18" height="20" rx="3"></rect><rect x="587" y="510" width="18" height="20" rx="3"></rect><rect x="515" y="545" width="18" height="20" rx="3"></rect><rect x="551" y="545" width="18" height="20" rx="3"></rect><rect x="587" y="545" width="18" height="20" rx="3"></rect><rect x="515" y="580" width="18" height="20" rx="3"></rect><rect x="551" y="580" width="18" height="20" rx="3"></rect><rect x="587" y="580" width="18" height="20" rx="3"></rect></g>
+    <g fill="#F7D47D"><rect x="515" y="615" width="18" height="20" rx="3"></rect><rect x="551" y="615" width="18" height="20" rx="3"></rect><rect x="587" y="615" width="18" height="20" rx="3"></rect></g>
+    <!-- green entrance -->
+    <path d="M530 695 v-35 h60 v35" fill="#1B7A6B"></path>
+    <path d="M520 660 h80 l-8-14 h-64 z" fill="#2DBE9E"></path>
+    <rect x="553" y="670" width="14" height="25" fill="#13243D"></rect>
+    <!-- palm tree -->
+    <path d="M458 697 C455 650, 448 612, 428 581" stroke="#78543B" stroke-width="7" stroke-linecap="round" fill="none"></path>
+    <path d="M430 587 C408 565, 390 566, 374 584 M430 587 C413 584, 400 594, 393 611 M430 587 C443 560, 461 552, 481 557 M430 587 C452 579, 470 588, 483 604" stroke="#2DBE9E" stroke-width="9" stroke-linecap="round" fill="none"></path>
+    <!-- contract checklist emerging from hotel -->
+    <g transform="rotate(10 650 615)" filter="url(#shadow)">
+      <rect x="610" y="550" width="88" height="125" rx="9" fill="#FFFFFF" stroke="#9FB4BC" stroke-width="2"></rect>
+      <rect x="636" y="542" width="36" height="15" rx="5" fill="#13243D"></rect>
+      <text x="654" y="574" text-anchor="middle" font-size="8" font-weight="900" fill="#1B2B44">CONTRACT</text>
+      <g fill="#2DBE9E"><rect x="622" y="585" width="13" height="13" rx="3"></rect><rect x="622" y="610" width="13" height="13" rx="3"></rect><rect x="622" y="635" width="13" height="13" rx="3"></rect></g>
+      <g fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M625 591 l3 3 5-6"></path><path d="M625 616 l3 3 5-6"></path><path d="M625 641 l3 3 5-6"></path></g>
+      <path d="M643 592 h42 M643 617 h36 M643 642 h40" stroke="#B9CBD3" stroke-width="5" stroke-linecap="round"></path>
+    </g>
+  </g>
+
+  <!-- ===== LEFT FOREGROUND: contract folders + plant ===== -->
+  <g filter="url(#shadow)">
+    <path d="M70 790 L330 778 L336 856 L76 872 Z" fill="#2F5E9E"></path>
+    <path d="M78 768 L338 756 L344 834 L84 850 Z" fill="#A63D3A"></path>
+    <path d="M86 746 L346 734 L352 812 L92 828 Z" fill="#1B7A6B"></path>
+    <path d="M94 724 L354 712 L360 790 L100 806 Z" fill="#FFFFFF"></path>
+  </g>
+  <text x="122" y="764" font-size="18" font-weight="900" fill="#13243D" transform="rotate(-2.6 122 764)">CONTRACTS</text>
+  <rect x="122" y="772" width="70" height="20" rx="5" fill="#2F5E9E" transform="rotate(-2.6 122 772)"></rect>
+  <text x="157" y="787" text-anchor="middle" font-size="11" font-weight="900" fill="#FFFFFF" transform="rotate(-2.6 157 787)">WINTER</text>
+  <rect x="198" y="769" width="70" height="20" rx="5" fill="#A63D3A" transform="rotate(-2.6 198 769)"></rect>
+  <text x="233" y="784" text-anchor="middle" font-size="11" font-weight="900" fill="#FFFFFF" transform="rotate(-2.6 233 784)">SUMMER</text>
+  <rect x="274" y="765" width="56" height="20" rx="5" fill="#1B7A6B" transform="rotate(-2.6 274 765)"></rect>
+  <text x="302" y="780" text-anchor="middle" font-size="11" font-weight="900" fill="#FFFFFF" transform="rotate(-2.6 302 780)">YEAR</text>
+
+  <!-- bubble over folders -->
+  <g filter="url(#shadow)">
+    <path d="M70 600 h230 a22 22 0 0 1 22 22 v40 a22 22 0 0 1 -22 22 h-170 l-22 22 v-22 h-38 a22 22 0 0 1 -22 -22 v-40 a22 22 0 0 1 22 -22 z" fill="#FFFFFF" fill-opacity="0.95" stroke="#A7E3D3" stroke-width="2"></path>
+  </g>
+  <text x="186" y="636" text-anchor="middle" font-size="18" font-weight="900" fill="#13243D">I follow every</text>
+  <text x="186" y="662" text-anchor="middle" font-size="18" font-weight="900" fill="#13243D">contract for you!</text>
+
+  <!-- plant -->
+  <g>
+    <path d="M18 900 L22 820 L62 820 L66 900 Z" fill="#FFFFFF" stroke="#D5E3E6"></path>
+    <path d="M42 822 C 30 780, 10 760, -6 752 M42 822 C 46 776, 60 752, 78 740 M42 822 C 36 790, 40 760, 30 730 M42 822 C 58 800, 82 792, 98 794" stroke="#4FB286" stroke-width="10" stroke-linecap="round" fill="none"></path>
+  </g>
+
+  <!-- ===== LAPTOP ===== -->
+  <g>
+    <path d="M660 610 L880 600 L888 742 L668 752 Z" fill="#0E1A2C"></path>
+    <path d="M668 618 L874 609 L880 734 L674 743 Z" fill="#13243D"></path>
+    <!-- screen content -->
+    <text x="684" y="638" font-size="10" font-weight="800" fill="#8FE3CC" transform="rotate(-2.6 684 638)">Contract tracking</text>
+    <g transform="rotate(-2.6 680 660)">
+      <rect x="682" y="648" width="58" height="34" rx="4" fill="#1D3352"></rect>
+      <text x="688" y="662" font-size="8" fill="#9DBAC4">Entered</text>
+      <text x="688" y="676" font-size="12" font-weight="900" fill="#FFFFFF">430</text>
+      <rect x="746" y="648" width="58" height="34" rx="4" fill="#1D3352"></rect>
+      <text x="752" y="662" font-size="8" fill="#9DBAC4">Remaining</text>
+      <text x="752" y="676" font-size="12" font-weight="900" fill="#FFB66B">170</text>
+      <path d="M816 680 v-10 M824 680 v-18 M832 680 v-14 M840 680 v-24 M848 680 v-20 M856 680 v-28" stroke="#3DDBB0" stroke-width="5"></path>
+      <path d="M684 696 h170 M684 708 h150 M684 720 h160" stroke="#2A4566" stroke-width="5" stroke-linecap="round"></path>
+      <circle cx="846" cy="708" r="5" fill="#2DBE9E"></circle>
+      <circle cx="846" cy="720" r="5" fill="#2DBE9E"></circle>
+    </g>
+    <path d="M640 752 L900 740 L930 768 L650 784 Z" fill="#C6D3D8"></path>
+    <path d="M650 784 L930 768 L930 776 L652 792 Z" fill="#A7B7BE"></path>
+  </g>
+
+  <!-- ===== WOMAN (from behind, right) ===== -->
+  <g>
+    <!-- back / shoulders -->
+    <path d="M800 900 C 800 790, 840 720, 920 700 C 990 690, 1050 720, 1070 780 L1070 900 Z" fill="url(#shirt)"></path>
+    <!-- arm to laptop -->
+    <path d="M850 740 C 820 760, 800 770, 790 762" stroke="#A8C0D3" stroke-width="40" stroke-linecap="round" fill="none"></path>
+    <ellipse cx="786" cy="760" rx="20" ry="11" fill="#E8B796"></ellipse>
+    <!-- neck -->
+    <path d="M915 660 C 912 690, 930 705, 950 700 L 955 650 Z" fill="#D9A585"></path>
+    <!-- hair (long, back of head) -->
+    <path d="M880 610 C 870 520, 920 470, 975 480 C 1030 490, 1050 550, 1040 620 C 1035 680, 1045 740, 1030 800 C 1000 790, 975 760, 960 720 C 945 760, 930 760, 915 740 C 930 700, 900 670, 880 610 Z" fill="url(#hair)"></path>
+    <!-- ear + face edge hint -->
+    <path d="M890 590 C 880 600, 878 618, 892 628" stroke="#D9A585" stroke-width="10" stroke-linecap="round" fill="none"></path>
+    <path d="M905 520 C 930 495, 975 492, 1000 510" stroke="#5A4650" stroke-width="3" fill="none" opacity="0.6"></path>
+  </g>
+
+  <!-- sparkles -->
+  <path d="M120 120 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5 z" fill="#FFFFFF" opacity="0.9"></path>
+  <path d="M740 640 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 z" fill="#FFFFFF" opacity="0.8"></path>
+</svg>

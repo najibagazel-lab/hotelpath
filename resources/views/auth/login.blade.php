@@ -18,9 +18,7 @@
             --muted: #5f6f86;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -57,9 +55,7 @@
             text-decoration: none;
         }
 
-        .frame-brand b {
-            color: #2dbe9e;
-        }
+        .frame-brand b { color: #2dbe9e; }
 
         .login-outline {
             display: grid;
@@ -131,13 +127,9 @@
             box-shadow: 0 0 0 3px rgba(27, 122, 107, .14);
         }
 
-        .password-field {
-            position: relative;
-        }
+        .password-field { position: relative; }
 
-        .password-field input {
-            padding-right: 48px;
-        }
+        .password-field input { padding-right: 48px; }
 
         .password-toggle {
             position: absolute;
@@ -186,9 +178,7 @@
             cursor: pointer;
         }
 
-        .login-button:hover {
-            background: var(--teal-dark);
-        }
+        .login-button:hover { background: var(--teal-dark); }
 
         .login-error {
             margin: 0;
@@ -202,15 +192,16 @@
             min-width: 0;
             overflow: hidden;
             background: #dcebf1;
+            pointer-events: none;
         }
 
-        .hotel-illustration img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            pointer-events: none;
+        .hotel-illustration > svg {
+            position: relative !important;
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 100% !important;
+            max-height: 100% !important;
         }
 
         .login-frame footer {
@@ -221,9 +212,7 @@
         }
 
         @media (max-width: 1100px) {
-            .login-stage {
-                padding: 28px 20px;
-            }
+            .login-stage { padding: 28px 20px; }
 
             .login-frame {
                 max-width: 480px;
@@ -235,32 +224,20 @@
                 min-height: 0;
             }
 
-            .hotel-illustration {
-                display: none;
-            }
+            .hotel-illustration { display: none; }
 
             .login-form-panel {
                 min-height: 500px;
                 padding: 48px 38px;
             }
 
-            .login-frame footer {
-                text-align: center;
-            }
+            .login-frame footer { text-align: center; }
         }
 
         @media (max-width: 480px) {
-            .login-stage {
-                padding: 18px;
-            }
-
-            .login-form-panel {
-                padding: 42px 25px;
-            }
-
-            .login-form-panel h1 {
-                font-size: 34px;
-            }
+            .login-stage { padding: 18px; }
+            .login-form-panel { padding: 42px 25px; }
+            .login-form-panel h1 { font-size: 34px; }
         }
     </style>
 </head>
@@ -286,28 +263,17 @@
                         @enderror
 
                         <label for="username">Username</label>
-                        <input
-                            id="username"
-                            type="text"
-                            name="username"
-                            value="{{ old('username') }}"
-                            placeholder="Enter your username"
-                            autocomplete="username"
-                            required
-                            autofocus
-                        >
+                        <input id="username" type="text" name="username"
+                               value="{{ old('username') }}"
+                               placeholder="Enter your username"
+                               autocomplete="username" required autofocus>
 
                         <label for="password">Password</label>
 
                         <div class="password-field">
-                            <input
-                                id="password"
-                                type="password"
-                                name="password"
-                                placeholder="Enter your password"
-                                autocomplete="current-password"
-                                required
-                            >
+                            <input id="password" type="password" name="password"
+                                   placeholder="Enter your password"
+                                   autocomplete="current-password" required>
 
                             <button type="button" class="password-toggle" aria-label="Show password">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -327,7 +293,7 @@
                 </section>
 
                 <section class="hotel-illustration" aria-label="Hotel contract illustration">
-                    <img src="{{ asset('images/login-scene.svg') }}" alt="">
+                    @php echo file_get_contents(public_path('images/login-scene.svg')); @endphp
                 </section>
             </div>
 

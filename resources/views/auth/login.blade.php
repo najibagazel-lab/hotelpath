@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name') }} — Login</title>
+    <title>HotelPath — Login</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,9 @@
             --muted: #5f6f86;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -55,11 +57,13 @@
             text-decoration: none;
         }
 
-        .frame-brand b { color: #2dbe9e; }
+        .frame-brand b {
+            color: #2dbe9e;
+        }
 
         .login-outline {
             display: grid;
-            grid-template-columns: minmax(360px, 37%) minmax(0, 63%);
+            grid-template-columns: minmax(390px, 38%) minmax(0, 62%);
             min-height: 528px;
             overflow: hidden;
             background: #fff;
@@ -69,6 +73,8 @@
         }
 
         .login-form-panel {
+            position: relative;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -85,6 +91,7 @@
 
         .login-form-panel h1 {
             margin: 0;
+            color: var(--navy);
             font: 900 38px/1.05 "Nunito", sans-serif;
             letter-spacing: -1px;
         }
@@ -102,6 +109,7 @@
 
         .login-form-panel label:not(.remember-row) {
             margin-top: 5px;
+            color: var(--navy);
             font: 800 12px "Nunito", sans-serif;
         }
 
@@ -114,7 +122,7 @@
             background: #eaf1fb;
             border: 1px solid #cad8e8;
             border-radius: 8px;
-            outline: 0;
+            outline: none;
             font: 600 14px "Hanken Grotesk", sans-serif;
         }
 
@@ -123,9 +131,13 @@
             box-shadow: 0 0 0 3px rgba(27, 122, 107, .14);
         }
 
-        .password-field { position: relative; }
+        .password-field {
+            position: relative;
+        }
 
-        .password-field input { padding-right: 48px; }
+        .password-field input {
+            padding-right: 48px;
+        }
 
         .password-toggle {
             position: absolute;
@@ -142,6 +154,7 @@
         }
 
         .password-toggle svg {
+            display: block;
             width: 100%;
             height: 100%;
         }
@@ -173,7 +186,9 @@
             cursor: pointer;
         }
 
-        .login-button:hover { background: var(--teal-dark); }
+        .login-button:hover {
+            background: var(--teal-dark);
+        }
 
         .login-error {
             margin: 0;
@@ -182,16 +197,20 @@
         }
 
         .hotel-illustration {
+            position: relative;
+            z-index: 1;
             min-width: 0;
             overflow: hidden;
             background: #dcebf1;
         }
 
-        .hotel-illustration svg {
+        .hotel-illustration img {
             display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
+            pointer-events: none;
         }
 
         .login-frame footer {
@@ -202,7 +221,9 @@
         }
 
         @media (max-width: 1100px) {
-            .login-stage { padding: 28px 20px; }
+            .login-stage {
+                padding: 28px 20px;
+            }
 
             .login-frame {
                 max-width: 480px;
@@ -214,22 +235,32 @@
                 min-height: 0;
             }
 
-            .hotel-illustration { display: none; }
+            .hotel-illustration {
+                display: none;
+            }
 
             .login-form-panel {
                 min-height: 500px;
                 padding: 48px 38px;
             }
 
-            .login-frame footer { text-align: center; }
+            .login-frame footer {
+                text-align: center;
+            }
         }
 
         @media (max-width: 480px) {
-            .login-stage { padding: 18px; }
+            .login-stage {
+                padding: 18px;
+            }
 
-            .login-form-panel { padding: 42px 25px; }
+            .login-form-panel {
+                padding: 42px 25px;
+            }
 
-            .login-form-panel h1 { font-size: 34px; }
+            .login-form-panel h1 {
+                font-size: 34px;
+            }
         }
     </style>
 </head>
@@ -237,8 +268,8 @@
 <body>
     <main class="login-stage">
         <section class="login-frame">
-            <a class="frame-brand" href="{{ route('login') }}" aria-label="{{ config('app.name') }}">
-                {{ \Illuminate\Support\Str::before(config('app.name'), 'Path') }}<b>{{ \Illuminate\Support\Str::after(config('app.name'), 'Hotel') }}</b>
+            <a class="frame-brand" href="{{ route('login') }}" aria-label="HotelPath">
+                Hotel<b>Path</b>
             </a>
 
             <div class="login-outline">
@@ -267,6 +298,7 @@
                         >
 
                         <label for="password">Password</label>
+
                         <div class="password-field">
                             <input
                                 id="password"
@@ -295,11 +327,11 @@
                 </section>
 
                 <section class="hotel-illustration" aria-label="Hotel contract illustration">
-                    @php echo file_get_contents(public_path('images/login-scene.svg')); @endphp
+                    <img src="{{ asset('images/login-scene.svg') }}" alt="">
                 </section>
             </div>
 
-            <footer>{{ config('app.name') }} · Hotel contract tracking</footer>
+            <footer>HotelPath · Hotel contract tracking</footer>
         </section>
     </main>
 

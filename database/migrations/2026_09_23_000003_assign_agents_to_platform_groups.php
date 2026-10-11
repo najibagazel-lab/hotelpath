@@ -20,6 +20,13 @@ return new class extends Migration
 
         foreach ($assignments as $username => $platformIds) {
             $userId = $users->get($username);
+
+            // A fresh production database may not contain the local agent
+            // accounts yet. Do not create an invalid platform_user record.
+            if (! $userId) {
+                continue;
+            }
+
             foreach ($platformIds as $platformId) {
                 DB::table('platform_user')->insertOrIgnore(['platform_id' => $platformId, 'user_id' => $userId]);
             }

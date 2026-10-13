@@ -40,4 +40,27 @@ main{max-width:none}
   .contracting-filters input,
   .contracting-filters select,
   .stats-filter select{width:100%;min-width:0}
+
+  aside > a.active::before,
+  aside > a.active::after{display:none}
+
+  .compact-scroll-down{
+    display:block;
+    position:fixed;
+    right:16px;
+    bottom:18px;
+    z-index:50;
+    width:44px;
+    height:44px;
+    border:0;
+    border-radius:50%;
+    background:#177c72;
+    color:#fff;
+    box-shadow:0 6px 16px #177c7266;
+    font-size:25px;
+    line-height:1;
+    cursor:pointer;
+  }
 }
+
+.compact-scroll-down{display:none}

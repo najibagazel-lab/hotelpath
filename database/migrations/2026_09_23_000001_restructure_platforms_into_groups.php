@@ -39,6 +39,7 @@ return new class extends Migration
             ['Platform Peak', 'PLATFORM_PEAK', 'PLATFORM', 'PEAK'],
             ['Platform Sun', 'PLATFORM_SUN', 'PLATFORM', 'SUN'],
             ['Platform Sunquest', 'PLATFORM_SQ', 'PLATFORM', 'SUNQUEST'],
+            ['Platform Hey Trip', 'PLATFORM_HEY_TRIP', 'PLATFORM', 'HEY TRIP'],
         ];
 
         foreach ($newPlatforms as [$name, $code, $group, $label]) {
@@ -51,7 +52,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        DB::table('platforms')->whereIn('code', ['SEJOUR_HEY_TRIP', 'SEJOUR_AURUM', 'PLATFORM_DNA', 'PLATFORM_JMT', 'PLATFORM_PEAK', 'PLATFORM_SUN', 'PLATFORM_SQ'])->delete();
+        DB::table('platforms')->whereIn('code', ['SEJOUR_HEY_TRIP', 'SEJOUR_AURUM', 'PLATFORM_DNA', 'PLATFORM_JMT', 'PLATFORM_PEAK', 'PLATFORM_SUN', 'PLATFORM_SQ', 'PLATFORM_HEY_TRIP'])->delete();
         Schema::table('platforms', function (Blueprint $table) {
             $table->dropColumn(['platform_group', 'label']);
         });

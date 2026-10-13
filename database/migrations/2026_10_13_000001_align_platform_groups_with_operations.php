@@ -27,6 +27,7 @@ return new class extends Migration
             ['Platform Sunquest', 'PLATFORM_SQ', 'SUNQUEST'],
             ['Platform JMT', 'PLATFORM_JMT', 'JMT'],
             ['Platform Emerging', 'PLATFORM_EMERGING', 'EMERGING'],
+            ['Platform Hey Trip', 'PLATFORM_HEY_TRIP', 'HEY TRIP'],
         ];
 
         foreach ($sejourPlatforms as [$name, $code, $label]) {
@@ -41,17 +42,6 @@ return new class extends Migration
                 ['code' => $code],
                 ['name' => $name, 'label' => $label, 'platform_group' => 'PLATFORM', 'active' => true, 'updated_at' => $now, 'created_at' => $now]
             );
-        }
-
-        $legacyPlatformId = DB::table('platforms')->where('code', 'PLATFORM_HEY_TRIP')->value('id');
-        if ($legacyPlatformId) {
-            DB::table('platform_user')->where('platform_id', $legacyPlatformId)->delete();
-            DB::table('contract_tasks')->where('platform_id', $legacyPlatformId)->update([
-                'assigned_user_id' => null,
-                'is_active' => false,
-                'updated_at' => $now,
-            ]);
-            DB::table('platforms')->where('id', $legacyPlatformId)->update(['active' => false, 'updated_at' => $now]);
         }
 
         $allPlatformIds = DB::table('platforms')

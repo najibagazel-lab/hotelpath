@@ -98,6 +98,7 @@
             margin: 10px 0 25px;
             color: var(--muted);
             font-size: 14px;
+            text-align: center;
         }
 
         .login-form-panel form {

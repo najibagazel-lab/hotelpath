@@ -189,6 +189,8 @@
         .hotel-illustration {
             position: relative;
             z-index: 1;
+            display: grid;
+            place-items: center;
             min-width: 0;
             overflow: hidden;
             background: #dcebf1;
@@ -198,7 +200,7 @@
         .hotel-illustration > svg {
             position: relative !important;
             display: block !important;
-            width: 100% !important;
+            width: auto !important;
             max-width: 100% !important;
             height: 100% !important;
             max-height: 100% !important;
@@ -227,7 +229,7 @@
                 grid-template-rows: minmax(0, 1fr) auto;
             }
 
-            .login-outline { min-height: 0; height: 100%; }
+            .login-outline { min-height: 0; height: auto; }
             .login-form-panel { padding: clamp(28px, 6vh, 54px) 42px; }
             .login-frame footer { margin-top: 8px; }
         }

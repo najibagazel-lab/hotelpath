@@ -236,7 +236,7 @@
 
         @media (min-width: 1101px) and (max-height: 700px) {
             .login-frame {
-                transform: scale(.88);
+                transform: translateY(-35px) scale(.88);
                 transform-origin: center;
             }
         }

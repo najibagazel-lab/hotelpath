@@ -57,7 +57,7 @@ class ContractingController extends Controller
     {
         $this->authorizeContracting();
         $hotels = Hotel::where('active', true)
-            ->when($request->filled('hotel'), fn ($query) => $query->where('name', 'like', '%'.$request->hotel.'%'))
+            ->when($request->filled('hotel'), fn ($query) => $query->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->hotel).'%']))
             ->when($request->filled('region'), fn ($query) => $query->where('destination', $request->region))
             ->get();
         $seasons = Season::with('hotel')->current()->whereNotNull('hotel_id')
@@ -91,7 +91,7 @@ class ContractingController extends Controller
         $contracts = Contract::with(['hotel', 'season', 'tasks.platform'])
             ->where('purchase_contract_received', true)
             ->whereHas('season', fn ($season) => $season->current())
-            ->when($request->filled('hotel'), fn ($query) => $query->whereHas('hotel', fn ($hotel) => $hotel->where('name', 'like', '%'.$request->hotel.'%')))
+            ->when($request->filled('hotel'), fn ($query) => $query->whereHas('hotel', fn ($hotel) => $hotel->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->hotel).'%'])))
             ->orderBy('hotel_id')->orderBy('season_id')->get();
         $platforms = Platform::where('active', true)
             ->orderByRaw("CASE platform_group WHEN 'SEJOUR' THEN 1 WHEN 'PLATFORM' THEN 2 ELSE 3 END")
@@ -135,7 +135,7 @@ class ContractingController extends Controller
 
         $regions = Hotel::where('active', true)->whereNotNull('destination')->distinct()->orderBy('destination')->pluck('destination');
         $hotels = Hotel::where('active', true)
-            ->when($request->filled('hotel'), fn ($query) => $query->where('name', 'like', '%'.$request->hotel.'%'))
+            ->when($request->filled('hotel'), fn ($query) => $query->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->hotel).'%']))
             ->when($request->filled('region'), fn ($query) => $query->where('destination', $request->region))
             ->orderBy('name')
             ->get();
@@ -181,7 +181,7 @@ class ContractingController extends Controller
     {
         $this->authorizeContracting();
         $hotels = Hotel::where('active', true)
-            ->when($request->filled('hotel'), fn ($query) => $query->where('name', 'like', '%'.$request->hotel.'%'))
+            ->when($request->filled('hotel'), fn ($query) => $query->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->hotel).'%']))
             ->orderBy('name')->get();
         $seasons = Season::with('hotel')->current()->whereNotNull('hotel_id')
             ->when($request->filled('contract_type'), fn ($query) => $query->where('contract_type', $request->contract_type))

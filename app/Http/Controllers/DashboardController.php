@@ -98,7 +98,7 @@ class DashboardController extends Controller
             ->where('purchase_contract_received', true)
             ->whereHas('season', fn ($season) => $season->current())
             ->whereHas('tasks', fn ($task) => $task->where('is_active', true)->where('assigned_user_id', auth()->id()))
-            ->when($request->filled('hotel'), fn ($query) => $query->whereHas('hotel', fn ($hotel) => $hotel->where('name', 'like', '%'.$request->hotel.'%')))
+            ->when($request->filled('hotel'), fn ($query) => $query->whereHas('hotel', fn ($hotel) => $hotel->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->hotel).'%'])))
             ->orderBy('season_id')->orderBy('hotel_id')->get();
         $allowedPlatformIds = auth()->user()->platforms()->pluck('platforms.id')->all();
         $allowedPlatformGroups = $platforms->whereIn('id', $allowedPlatformIds)->pluck('platform_group');
@@ -140,7 +140,7 @@ class DashboardController extends Controller
             ->where('is_active', true)
             ->whereHas('contract', fn ($contract) => $contract->where('purchase_contract_received', true)
                 ->whereHas('season', fn ($season) => $season->current())
-                ->when($request->filled('hotel'), fn ($query) => $query->whereHas('hotel', fn ($hotel) => $hotel->where('name', 'like', '%'.$request->hotel.'%'))))
+                ->when($request->filled('hotel'), fn ($query) => $query->whereHas('hotel', fn ($hotel) => $hotel->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->hotel).'%']))))
             ->orderBy('platform_id')->orderBy('contract_id')->get();
         $rows = $tasks->map(fn ($task) => [$task->contract->hotel->name, ucfirst(strtolower($task->contract->season->contract_type)), $task->contract->season->start_date->format('d/m/Y'), $task->contract->season->end_date->format('d/m/Y'), $task->platform->label ?? $task->platform->name, ucfirst(strtolower($task->status)), $task->completed_at?->format('d/m/Y H:i') ?? '']);
 

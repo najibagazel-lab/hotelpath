@@ -128,7 +128,6 @@
     <rect x="650" y="228" width="40" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="670" y="244" fill="#17704A">PEAK</text>
     <rect x="558" y="258" width="40" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="578" y="274" fill="#17704A">SUN</text>
     <rect x="604" y="258" width="40" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="624" y="274" fill="#17704A">SQ</text>
-    <rect x="650" y="258" width="40" height="24" rx="6" fill="#FFF1D9" stroke="#E9B44C"></rect><text x="670" y="274" fill="#94600E">PAXIM</text>
     <rect x="558" y="288" width="63" height="24" rx="6" fill="#FFFFFF" stroke="#C3D2D8"></rect><text x="589" y="304" fill="#5F6F86">HEY TRIP</text>
     <rect x="627" y="288" width="63" height="24" rx="6" fill="#DDF5EE" stroke="#5CC9A7"></rect><text x="658" y="304" fill="#17704A">AURUM</text>
   </g>

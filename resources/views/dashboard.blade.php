@@ -11,6 +11,8 @@
             @endforeach
         </div>
         @foreach($platforms->groupBy('group') as $group => $groupPlatforms)
+            @php($sejourBundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'])
+            @php($sejourBundlePlatforms = $group === 'SEJOUR' ? $groupPlatforms->filter(fn ($platform) => in_array($platform->label, $sejourBundleLabels)) : collect())
             <div class="panel hotel-to-group-panel {{ $loop->first ? '' : 'to-hidden' }}" data-hotel-to-group-panel="{{ $group }}">
                 <div class="hotel-to-group-header"><span>HOTEL</span><span>TO ENTRY PROGRESS</span></div>
                 @foreach($hotelsBySeason as $hotelContracts)
@@ -18,11 +20,23 @@
                         <div class="hotel-progress-name"><b>{{ $hotelContracts->first()->hotel->name }}</b><small>{{ $hotelContracts->pluck('season.name')->join(' · ') }}</small></div>
                         <div class="hotel-to-platforms">
                             @foreach($groupPlatforms as $platform)
+                                @if($group === 'SEJOUR' && in_array($platform->label, $sejourBundleLabels))
+                                    @if($platform->label === 'DNA')
+                                        @php($total = $hotelContracts->count())
+                                        @php($done = $hotelContracts->filter(function ($contract) use ($sejourBundlePlatforms) {
+                                            $bundleTasks = $contract->tasks->where('is_active', true)->whereIn('platform_id', $sejourBundlePlatforms->pluck('id'));
+                                            return $bundleTasks->count() === $sejourBundlePlatforms->count() && $bundleTasks->every(fn ($task) => $task->status === 'COMPLETED');
+                                        })->count())
+                                        @php($percentage = $total ? round($done * 100 / $total) : 0)
+                                        <div class="hotel-to-platform-row sejour-bundle-progress"><b>DNA · JMT · PEAK · SUN · SUNQUEST</b><div class="hotel-progress-track"><i style="width:{{ $percentage }}%"></i></div><strong>{{ $percentage }}%</strong><small>{{ $done }}/{{ $total }}</small></div>
+                                    @endif
+                                @else
                                 @php($platformTasks = $hotelContracts->flatMap(fn($contract) => $contract->tasks->where('platform_id', $platform->id)->where('is_active', true)))
                                 @php($total = $platformTasks->count())
                                 @php($done = $platformTasks->where('status', 'COMPLETED')->count())
                                 @php($percentage = $total ? round($done * 100 / $total) : 0)
                                 <div class="hotel-to-platform-row"><b>{{ $platform->label }}</b><div class="hotel-progress-track"><i style="width:{{ $percentage }}%"></i></div><strong>{{ $percentage }}%</strong><small>{{ $done }}/{{ $total }}</small></div>
+                                @endif
                             @endforeach
                         </div>
                     </article>
@@ -54,7 +68,7 @@
 
 @push('scripts')
 <style>
-.hotel-progress-filter input{width:300px;height:36px;border:1px solid #d6e0eb;border-radius:8px;background:#fff;padding:8px 12px;font:14px 'DM Sans';color:#24324a}.hotel-to-tabs{display:flex;gap:9px;margin-bottom:14px}.hotel-to-tabs button{border:1px solid #d6e0eb;border-radius:8px;background:#fff;color:#59708f;padding:11px 24px;font:700 13px 'DM Sans';cursor:pointer}.hotel-to-tabs button.active{background:#16877c;border-color:#16877c;color:#fff}.hotel-to-group-panel{padding:0;overflow:hidden}.hotel-to-group-header{display:grid;grid-template-columns:240px 1fr;gap:18px;padding:13px 18px;background:#f7f9fc;color:#667894;font-size:10px;font-weight:700;letter-spacing:1px}.hotel-to-progress{display:grid;grid-template-columns:240px 1fr;gap:18px;padding:17px 18px;border-top:1px solid #e7edf4}.hotel-to-platforms{display:grid;gap:9px}.hotel-to-platform-row{display:grid;grid-template-columns:78px 1fr 36px 38px;gap:9px;align-items:center}.hotel-to-platform-row>b{font-size:12px;color:#274c77}.hotel-to-platform-row strong{font-size:12px}.hotel-to-platform-row small{color:#8290a4;font-size:11px}.to-hidden{display:none!important}@media(max-width:760px){.hotel-progress-filter input{width:100%}.hotel-to-group-header{display:none}.hotel-to-progress{grid-template-columns:1fr}.hotel-to-platform-row{grid-template-columns:62px 1fr 32px 32px}.hotel-to-tabs button{padding:10px 18px}}
+.hotel-progress-filter input{width:300px;height:36px;border:1px solid #d6e0eb;border-radius:8px;background:#fff;padding:8px 12px;font:14px 'DM Sans';color:#24324a}.hotel-to-tabs{display:flex;gap:9px;margin-bottom:14px}.hotel-to-tabs button{border:1px solid #d6e0eb;border-radius:8px;background:#fff;color:#59708f;padding:11px 24px;font:700 13px 'DM Sans';cursor:pointer}.hotel-to-tabs button.active{background:#16877c;border-color:#16877c;color:#fff}.hotel-to-group-panel{padding:0;overflow:hidden}.hotel-to-group-header{display:grid;grid-template-columns:240px 1fr;gap:18px;padding:13px 18px;background:#f7f9fc;color:#667894;font-size:10px;font-weight:700;letter-spacing:1px}.hotel-to-progress{display:grid;grid-template-columns:240px 1fr;gap:18px;padding:17px 18px;border-top:1px solid #e7edf4}.hotel-to-platforms{display:grid;gap:9px}.hotel-to-platform-row{display:grid;grid-template-columns:205px 1fr 36px 38px;gap:9px;align-items:center}.hotel-to-platform-row>b{font-size:12px;color:#274c77}.hotel-to-platform-row strong{font-size:12px}.hotel-to-platform-row small{color:#8290a4;font-size:11px}.to-hidden{display:none!important}@media(max-width:760px){.hotel-progress-filter input{width:100%}.hotel-to-group-header{display:none}.hotel-to-progress{grid-template-columns:1fr}.hotel-to-platform-row{grid-template-columns:145px 1fr 32px 32px}.hotel-to-tabs button{padding:10px 18px}}
 .platform-panel .muted{margin:5px 0 0}.to-group-progress{display:grid;grid-template-columns:135px 1fr;gap:20px;padding:20px 0;border-top:1px solid #e7edf4}.to-group-progress h3{align-self:center;margin:0;font:800 20px Manrope;letter-spacing:.8px;color:#17304e}.to-group-rows{display:grid;gap:11px}.to-progress-row{display:grid;grid-template-columns:205px repeat(2,minmax(230px,1fr));gap:16px;align-items:center}.sejour-bundle-progress .to-short-name{white-space:nowrap}.to-short-name{font-size:12px;color:#274c77}.to-type-progress{display:grid;grid-template-columns:56px 1fr 33px 35px;gap:7px;align-items:center;font-size:12px}.to-type-progress>span{font-weight:700}.to-type-progress.winter>span{color:#356fb5}.to-type-progress.summer>span{color:#b44747}.to-type-progress b{font-size:12px}.to-type-progress small{color:#8290a4}@media(max-width:900px){.to-group-progress{grid-template-columns:1fr}.to-progress-row{grid-template-columns:205px 1fr}.sejour-bundle-progress .to-short-name{white-space:normal}.to-type-progress{grid-column:2}.to-group-progress h3{font-size:17px}}@media(max-width:600px){.to-progress-row{grid-template-columns:1fr}.to-type-progress{grid-column:auto;grid-template-columns:50px 1fr 30px 30px}}
 </style>
 <script>

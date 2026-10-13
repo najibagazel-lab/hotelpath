@@ -54,7 +54,37 @@ class DashboardController extends Controller
         // La matrice est volontairement construite Hôtel × Saison : chaque cellule
         // avance uniquement à partir des tâches cochées pour ce contrat précis.
         $hotelsBySeason = $contracts->groupBy('hotel_id');
-        return view('dashboard', compact('contracts','platforms','totalTasks','completed','seasons','hotelsBySeason'));
+        $sejourBundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'];
+        $sejourBundlePlatformIds = $platforms
+            ->where('group', 'SEJOUR')
+            ->whereIn('label', $sejourBundleLabels)
+            ->pluck('id');
+
+        // Count completed contracts in the Sejour bundle, not the five TO tasks.
+        $sejourBundleProgress = collect([
+            ['label' => 'Winter', 'types' => ['WINTER', 'YEAR']],
+            ['label' => 'Summer', 'types' => ['SUMMER', 'YEAR']],
+        ])->map(function ($definition) use ($contracts, $sejourBundlePlatformIds) {
+            $typeContracts = $contracts->filter(fn ($contract) => in_array($contract->season->contract_type, $definition['types']));
+            $total = $typeContracts->count();
+            $done = $typeContracts->filter(function ($contract) use ($sejourBundlePlatformIds) {
+                $bundleTasks = $contract->tasks
+                    ->where('is_active', true)
+                    ->whereIn('platform_id', $sejourBundlePlatformIds);
+
+                return $bundleTasks->count() === $sejourBundlePlatformIds->count()
+                    && $bundleTasks->every(fn ($task) => $task->status === 'COMPLETED');
+            })->count();
+
+            return (object) [
+                'label' => $definition['label'],
+                'total' => $total,
+                'done' => $done,
+                'percent' => $total ? round($done * 100 / $total) : 0,
+            ];
+        });
+
+        return view('dashboard', compact('contracts','platforms','totalTasks','completed','seasons','hotelsBySeason','sejourBundleProgress'));
     }
 
     public function myTasks(Request $request)

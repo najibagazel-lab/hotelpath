@@ -234,6 +234,13 @@
             .login-frame footer { margin-top: 8px; }
         }
 
+        @media (min-width: 1101px) and (max-height: 700px) {
+            .login-frame {
+                transform: scale(.88);
+                transform-origin: center;
+            }
+        }
+
         @media (max-width: 1100px) {
             .login-stage { padding: 28px 20px; }
 

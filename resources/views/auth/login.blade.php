@@ -92,6 +92,8 @@
             letter-spacing: -1px;
         }
 
+        .welcome-title { text-align: center; }
+
         .form-intro {
             margin: 10px 0 25px;
             color: var(--muted);
@@ -281,8 +283,7 @@
 
             <div class="login-outline">
                 <section class="login-form-panel">
-                    <p class="form-eyebrow">HOTEL CONTRACT MANAGEMENT</p>
-                    <h1>Login</h1>
+                    <h1 class="welcome-title">Welcome</h1>
                     <p class="form-intro">Access your hotel contract workspace.</p>
 
                     <form method="POST" action="/connexion" novalidate>

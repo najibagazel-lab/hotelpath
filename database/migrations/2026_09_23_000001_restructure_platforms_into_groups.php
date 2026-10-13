@@ -16,7 +16,7 @@ return new class extends Migration
 
         $sejourMappings = [
             'DNATA' => 'DNA', 'JUMBO' => 'JMT', 'PEAK' => 'PEAK',
-            'SUNHOTELS' => 'SUN', 'SUNQUEST' => 'SQ', 'PAXIMUM' => 'PAXIMUM',
+            'SUNHOTELS' => 'SUN', 'SUNQUEST' => 'SUNQUEST', 'PAXIMUM' => 'PAXIMUM',
         ];
         foreach ($sejourMappings as $code => $label) {
             DB::table('platforms')->where('code', $code)->update([
@@ -38,8 +38,7 @@ return new class extends Migration
             ['Platform JMT', 'PLATFORM_JMT', 'PLATFORM', 'JMT'],
             ['Platform Peak', 'PLATFORM_PEAK', 'PLATFORM', 'PEAK'],
             ['Platform Sun', 'PLATFORM_SUN', 'PLATFORM', 'SUN'],
-            ['Platform SQ', 'PLATFORM_SQ', 'PLATFORM', 'SQ'],
-            ['Platform Hey Trip', 'PLATFORM_HEY_TRIP', 'PLATFORM', 'HEY TRIP'],
+            ['Platform Sunquest', 'PLATFORM_SQ', 'PLATFORM', 'SUNQUEST'],
         ];
 
         foreach ($newPlatforms as [$name, $code, $group, $label]) {
@@ -52,7 +51,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        DB::table('platforms')->whereIn('code', ['SEJOUR_HEY_TRIP', 'SEJOUR_AURUM', 'PLATFORM_DNA', 'PLATFORM_JMT', 'PLATFORM_PEAK', 'PLATFORM_SUN', 'PLATFORM_SQ', 'PLATFORM_HEY_TRIP'])->delete();
+        DB::table('platforms')->whereIn('code', ['SEJOUR_HEY_TRIP', 'SEJOUR_AURUM', 'PLATFORM_DNA', 'PLATFORM_JMT', 'PLATFORM_PEAK', 'PLATFORM_SUN', 'PLATFORM_SQ'])->delete();
         Schema::table('platforms', function (Blueprint $table) {
             $table->dropColumn(['platform_group', 'label']);
         });

@@ -61,7 +61,7 @@ class DashboardController extends Controller
     {
         $platforms = Platform::where('active', true)
             ->orderByRaw("CASE platform_group WHEN 'SEJOUR' THEN 1 WHEN 'PLATFORM' THEN 2 ELSE 3 END")
-            ->orderByRaw("CASE label WHEN 'DNA' THEN 1 WHEN 'JMT' THEN 2 WHEN 'PEAK' THEN 3 WHEN 'SUN' THEN 4 WHEN 'SQ' THEN 5 WHEN 'PAXIMUM' THEN 6 WHEN 'HEY TRIP' THEN 7 WHEN 'AURUM' THEN 8 ELSE 99 END")
+            ->orderByRaw("CASE WHEN platform_group = 'SEJOUR' THEN CASE label WHEN 'DNA' THEN 1 WHEN 'PEAK' THEN 2 WHEN 'SUN' THEN 3 WHEN 'JMT' THEN 4 WHEN 'HEY TRIP' THEN 5 WHEN 'SUNQUEST' THEN 6 WHEN 'AURUM' THEN 7 WHEN 'PAXIMUM' THEN 8 ELSE 99 END WHEN platform_group = 'PLATFORM' THEN CASE label WHEN 'DNA' THEN 1 WHEN 'PEAK' THEN 2 WHEN 'SUN' THEN 3 WHEN 'SUNQUEST' THEN 4 WHEN 'JMT' THEN 5 WHEN 'EMERGING' THEN 6 ELSE 99 END ELSE 99 END")
             ->get();
         // Use the same active-period rule as Contract receipt follow-up.
         $contracts = Contract::with(['hotel', 'season', 'tasks.platform'])

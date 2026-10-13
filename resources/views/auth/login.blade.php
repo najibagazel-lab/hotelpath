@@ -211,6 +211,27 @@
             font-size: 10px;
         }
 
+        @media (min-width: 1101px) {
+            html, body { height: 100%; overflow: hidden; }
+
+            .login-stage {
+                min-height: 0;
+                height: 100dvh;
+                padding: clamp(14px, 3vh, 40px) 40px;
+            }
+
+            .login-frame {
+                height: 100%;
+                padding-top: clamp(42px, 7vh, 60px);
+                display: grid;
+                grid-template-rows: minmax(0, 1fr) auto;
+            }
+
+            .login-outline { min-height: 0; height: 100%; }
+            .login-form-panel { padding: clamp(28px, 6vh, 54px) 42px; }
+            .login-frame footer { margin-top: 8px; }
+        }
+
         @media (max-width: 1100px) {
             .login-stage { padding: 28px 20px; }
 

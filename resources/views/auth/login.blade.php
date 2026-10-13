@@ -42,7 +42,7 @@
         .login-frame {
             width: min(1240px, 100%);
             position: relative;
-            padding-top: 60px;
+            padding-top: 0;
         }
 
         .frame-brand {
@@ -227,7 +227,7 @@
 
             .login-frame {
                 height: 100%;
-                padding-top: clamp(42px, 7vh, 60px);
+                padding-top: 0;
                 display: grid;
                 grid-template-rows: minmax(0, 1fr) auto;
             }
@@ -278,10 +278,6 @@
 <body>
     <main class="login-stage">
         <section class="login-frame">
-            <a class="frame-brand" href="{{ route('login') }}" aria-label="HotelPath">
-                Hotel<b>Path</b>
-            </a>
-
             <div class="login-outline">
                 <section class="login-form-panel">
                     <h1 class="welcome-title">Welcome</h1>

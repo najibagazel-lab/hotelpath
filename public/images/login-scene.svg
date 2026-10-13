@@ -89,9 +89,6 @@
   <path d="M259 93 l5 5 9-10" fill="none" stroke="#C47F07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
   <text x="292" y="100" font-size="20" font-weight="800" fill="#13243D">Hello! I track every hotel contract, from receipt to entry.</text>
 
-  <!-- panel title -->
-  <text x="520" y="168" text-anchor="middle" font-size="21" font-weight="900" fill="#13243D" letter-spacing="0.8">HOTEL CONTRACT ENTRY TRACKING Â· SEJOUR + TO</text>
-
   <!-- === 4 stage cards === -->
   <!-- 1 receipt -->
   <g filter="url(#shadow)"><rect x="172" y="190" width="160" height="140" rx="18" fill="url(#card)" stroke="#B5E6D8" stroke-width="2"></rect></g>
@@ -119,8 +116,6 @@
   <path d="M388 240h40M388 252h60M388 264h50M388 276h34" stroke="#3DDBB0" stroke-width="3" stroke-linecap="round"></path>
   <circle cx="478" cy="270" r="11" fill="#2DBE9E"></circle>
   <path d="M473 270 l4 4 7-8" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
-  <text x="438" y="314" text-anchor="middle" font-size="13" font-weight="800" fill="#5F6F86">100 â‚¬ â†’ <tspan fill="#C47F07">101 â‚¬</tspan></text>
-
   <path d="M522 260 h14" stroke="#2DBE9E" stroke-width="3" stroke-linecap="round"></path>
   <path d="M532 254 l7 6 -7 6" fill="none" stroke="#2DBE9E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
 
@@ -183,8 +178,6 @@
   <rect x="680" y="460" width="140" height="9" rx="4.5" fill="#2DBE9E"></rect>
   <text x="680" y="494" font-size="12" font-weight="800" fill="#1B7A6B">Year contracts</text>
   <text x="860" y="494" text-anchor="end" font-size="12" font-weight="900" fill="#13243D">37</text>
-  <text x="680" y="530" font-size="11" font-weight="700" fill="#5F6F86">Today: 18 Â· This week: 92</text>
-
   <!-- ===== DESK ===== -->
   <path d="M0 700 L1060 680 L1060 900 L0 900 Z" fill="url(#desk)"></path>
   <path d="M0 700 L1060 680" stroke="#FFFFFF" stroke-width="3"></path>

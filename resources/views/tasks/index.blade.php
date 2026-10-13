@@ -11,6 +11,7 @@
             <div class="season-group-title"><div class="platform-tabs" role="tablist"><button class="{{ $defaultPlatformGroup === 'SEJOUR' ? 'active' : '' }}" type="button" data-platform-tab="SEJOUR">Sejour</button><button class="{{ $defaultPlatformGroup === 'PLATFORM' ? 'active' : '' }}" type="button" data-platform-tab="PLATFORM">Platform</button></div><form class="task-hotel-filter" method="GET"><input name="hotel" value="{{ request('hotel') }}" placeholder="Search hotel" aria-label="Search hotel"></form></div>
             @if($loop->first)<section class="to-progress"><div class="to-progress-title"><b>TO entry progress</b><small>Entered contracts / received contracts · Year is included in Winter and Summer</small></div><div class="to-progress-list">@foreach($toProgress as $progress)<article class="to-progress-card" data-progress-group="{{ $progress->group }}"><span>{{ $progress->label }}</span><div class="to-progress-season"><b>Winter</b><strong>{{ $progress->winterEntered }}<i>/</i>{{ $progress->winterReceived }}</strong></div><div class="to-progress-season"><b>Summer</b><strong>{{ $progress->summerEntered }}<i>/</i>{{ $progress->summerReceived }}</strong></div><small>entered / received</small></article>@endforeach</div></section>@endif
             @php($platformGroups = $platforms->groupBy(fn ($platform) => $platform->platform_group ?? 'OTHER'))
+            @php($sejourBundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'])
             <div class="employee-board grouped-platform-board" data-active-group="{{ $defaultPlatformGroup }}"><table><thead><tr><th rowspan="2" class="hotel-column">Hotel</th><th rowspan="2" class="season-column">Season</th>@foreach($platformGroups as $group => $groupPlatforms)<th class="platform-group-title" data-platform-group="{{ $group }}" colspan="{{ $groupPlatforms->count() }}">{{ $group === 'PLATFORM' ? 'Platform' : ucfirst(strtolower($group)) }}</th>@endforeach</tr><tr>@foreach($platformGroups as $group => $groupPlatforms) @foreach($groupPlatforms as $platform)<th class="platform-column-title" data-platform-group="{{ $group }}">{{ $platform->label ?? $platform->name }}</th>@endforeach @endforeach</tr></thead><tbody>
                 @foreach($campaignContracts->groupBy('hotel_id') as $hotelContracts)
                     @foreach($hotelContracts as $contract)
@@ -21,6 +22,7 @@
                             <td class="task-season season-{{ strtolower($seasonType) }}"><b>{{ ucfirst(strtolower($seasonType)) }}</b><small>{{ $contract->season->start_date->format('d/m/y') }} &rarr; {{ $contract->season->end_date->format('d/m/y') }}</small></td>
                             @foreach($platformGroups as $group => $groupPlatforms)
                             @foreach($groupPlatforms as $platform)
+                                @if($group !== 'SEJOUR' || !in_array($platform->label, $sejourBundleLabels))
                                 @php($task = $contract->tasks->where('is_active', true)->firstWhere('platform_id', $platform->id))
                                 @php($allowed = in_array($platform->id, $allowedPlatformIds) && $task && $task->assigned_user_id === auth()->id())
                                 <td class="employee-check" data-platform-group="{{ $group }}">
@@ -32,6 +34,20 @@
                                         <span class="matrix-check locked unavailable">—</span>
                                     @endif
                                 </td>
+                                @elseif($platform->label === 'DNA')
+                                    @php($bundlePlatforms = $groupPlatforms->filter(fn ($item) => in_array($item->label, $sejourBundleLabels)))
+                                    @php($bundleTasks = $contract->tasks->where('is_active', true)->whereIn('platform_id', $bundlePlatforms->pluck('id')))
+                                    @php($bundleAllowed = $bundlePlatforms->count() === count($sejourBundleLabels) && $bundleTasks->count() === count($sejourBundleLabels) && $bundleTasks->every(fn ($task) => $task->assigned_user_id === auth()->id()))
+                                    @php($bundleCompleted = $bundleTasks->count() === count($sejourBundleLabels) && $bundleTasks->every(fn ($task) => $task->status === 'COMPLETED'))
+                                    <td class="employee-check sejour-bundle-check" data-platform-group="SEJOUR" colspan="{{ count($sejourBundleLabels) }}">
+                                        @if($bundleAllowed)
+                                            @php($dnaTask = $bundleTasks->firstWhere('platform_id', $bundlePlatforms->firstWhere('label', 'DNA')->id))
+                                            <form method="POST" action="{{ route('tasks.sejour-bundle.update', $dnaTask) }}">@csrf @method('PATCH')<button class="matrix-check {{ $bundleCompleted ? 'checked' : '' }}" aria-label="Update DNA, JMT, PEAK, SUN and SUNQUEST together">{{ $bundleCompleted ? 'âœ“' : '' }}</button></form>
+                                        @else
+                                            <span class="matrix-check locked {{ $bundleCompleted ? 'checked' : '' }}">{{ $bundleCompleted ? 'âœ“' : '' }}</span>
+                                        @endif
+                                    </td>
+                                @endif
                             @endforeach
                             @endforeach
                         </tr>
@@ -64,7 +80,6 @@
 .grouped-platform-board thead tr:nth-child(2) th:first-child{border-left:2px solid #dce6f1}
 </style>
 <style>
-.sejour-bundle-hidden{display:none!important}
 .grouped-platform-board .sejour-bundle-check{text-align:center;padding:8px 2px}
 .grouped-platform-board .sejour-bundle-check form{display:flex;justify-content:center}
 </style>
@@ -90,36 +105,6 @@ document.querySelectorAll('.season-task-group').forEach(section => {
 document.querySelectorAll('.task-hotel-filter input').forEach(input => {
   let timer;
   input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => input.form.submit(), 300); });
-});
-</script>
-<script>
-// In Sejour, DNA/JMT/PEAK/SUN/SUNQUEST are one operational bundle.
-document.querySelectorAll('.grouped-platform-board table').forEach(table => {
-  const headerCells = Array.from(table.tHead?.rows?.[1]?.cells ?? []);
-  const bundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'];
-  const bundleIndexes = headerCells
-    .map((cell, index) => bundleLabels.includes(cell.textContent.trim()) ? index + 2 : -1)
-    .filter(index => index >= 0);
-
-  if (bundleIndexes.length !== bundleLabels.length) return;
-
-  table.tBodies[0]?.querySelectorAll('tr').forEach(row => {
-    const cells = Array.from(row.cells);
-    const bundleCells = bundleIndexes.map(index => cells[index]).filter(Boolean);
-    const firstCell = bundleCells[0];
-    if (!firstCell || bundleCells.length !== bundleLabels.length) return;
-
-    bundleCells.slice(1).forEach(cell => cell.classList.add('sejour-bundle-hidden'));
-    firstCell.colSpan = bundleCells.length;
-    firstCell.classList.add('sejour-bundle-check');
-
-    const form = firstCell.querySelector('form[action]');
-    if (!form) return;
-
-    form.action = form.action.replace(/\/taches\/([^/]+)$/, '/taches/$1/sejour-bundle');
-    form.querySelector('input[name="status"]')?.remove();
-    form.querySelector('button')?.setAttribute('aria-label', 'Update DNA, JMT, PEAK, SUN and SUNQUEST together');
-  });
 });
 </script>
 @endpush

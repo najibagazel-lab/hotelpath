@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/contrats', [ContractController::class, 'store'])->name('contracts.store');
     Route::delete('/contrats/{contract}', [ContractController::class, 'destroy'])->name('contracts.destroy');
     Route::patch('/taches/{task}', [ContractController::class, 'updateTask'])->name('tasks.update');
+    Route::patch('/taches/{task}/sejour-bundle', [ContractController::class, 'updateSejourBundle'])->name('tasks.sejour-bundle.update');
     Route::get('/access', [UserAccessController::class, 'index'])->name('access.index');
     Route::post('/access', [UserAccessController::class, 'store'])->name('access.store');
     Route::put('/access/{user}', [UserAccessController::class, 'update'])->name('access.update');

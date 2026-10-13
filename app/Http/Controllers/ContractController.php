@@ -46,6 +46,56 @@ class ContractController extends Controller
         return back()->with('success','Statut mis à jour.');
     }
 
+    /**
+     * The five core Sejour TOs are entered together operationally.
+     */
+    public function updateSejourBundle(ContractTask $task)
+    {
+        $bundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'];
+        $contract = $task->contract;
+
+        abort_unless(
+            $task->is_active
+            && $task->assigned_user_id === auth()->id()
+            && $task->platform->platform_group === 'SEJOUR'
+            && in_array($task->platform->label, $bundleLabels),
+            403
+        );
+
+        $tasks = ContractTask::query()
+            ->where('contract_id', $contract->id)
+            ->where('is_active', true)
+            ->where('assigned_user_id', auth()->id())
+            ->whereHas('platform', fn ($platform) => $platform
+                ->where('platform_group', 'SEJOUR')
+                ->whereIn('label', $bundleLabels))
+            ->get();
+
+        // An agent can update the bundle only when all five tasks are theirs.
+        abort_unless($tasks->count() === count($bundleLabels), 403);
+
+        $markCompleted = $tasks->contains(fn ($task) => $task->status !== 'COMPLETED');
+
+        DB::transaction(function () use ($tasks, $contract, $markCompleted) {
+            $tasks->each(function ($task) use ($markCompleted) {
+                $task->update([
+                    'status' => $markCompleted ? 'COMPLETED' : 'PENDING',
+                    'completed_at' => $markCompleted ? now() : null,
+                    'completed_by' => $markCompleted ? auth()->id() : null,
+                ]);
+            });
+
+            ActivityLog::create([
+                'user_id' => auth()->id(),
+                'contract_id' => $contract->id,
+                'action' => 'SEJOUR_BUNDLE_STATUS_MODIFIE',
+                'details' => 'DNA, JMT, PEAK, SUN and SUNQUEST updated together',
+            ]);
+        });
+
+        return back()->with('success', 'The Sejour bundle was updated.');
+    }
+
     public function destroy(Contract $contract)
     {
         $hotelName = $contract->hotel->name;

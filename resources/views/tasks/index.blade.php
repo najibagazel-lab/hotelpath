@@ -63,6 +63,11 @@
 .grouped-platform-board td.task-season{padding-left:8px;padding-right:8px}.grouped-platform-board .task-season small{white-space:nowrap}
 .grouped-platform-board thead tr:nth-child(2) th:first-child{border-left:2px solid #dce6f1}
 </style>
+<style>
+.sejour-bundle-hidden{display:none!important}
+.grouped-platform-board .sejour-bundle-check{text-align:center;padding:8px 2px}
+.grouped-platform-board .sejour-bundle-check form{display:flex;justify-content:center}
+</style>
 <script>
 const modal=document.querySelector('[data-hotel-modal]'),deleteModal=document.querySelector('[data-delete-modal]');
 document.querySelector('[data-open-hotel]')?.addEventListener('click',()=>modal?.classList.add('open'));
@@ -85,6 +90,36 @@ document.querySelectorAll('.season-task-group').forEach(section => {
 document.querySelectorAll('.task-hotel-filter input').forEach(input => {
   let timer;
   input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => input.form.submit(), 300); });
+});
+</script>
+<script>
+// In Sejour, DNA/JMT/PEAK/SUN/SUNQUEST are one operational bundle.
+document.querySelectorAll('.grouped-platform-board table').forEach(table => {
+  const headerCells = Array.from(table.tHead?.rows?.[1]?.cells ?? []);
+  const bundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'];
+  const bundleIndexes = headerCells
+    .map((cell, index) => bundleLabels.includes(cell.textContent.trim()) ? index + 2 : -1)
+    .filter(index => index >= 0);
+
+  if (bundleIndexes.length !== bundleLabels.length) return;
+
+  table.tBodies[0]?.querySelectorAll('tr').forEach(row => {
+    const cells = Array.from(row.cells);
+    const bundleCells = bundleIndexes.map(index => cells[index]).filter(Boolean);
+    const firstCell = bundleCells[0];
+    if (!firstCell || bundleCells.length !== bundleLabels.length) return;
+
+    bundleCells.slice(1).forEach(cell => cell.classList.add('sejour-bundle-hidden'));
+    firstCell.colSpan = bundleCells.length;
+    firstCell.classList.add('sejour-bundle-check');
+
+    const form = firstCell.querySelector('form[action]');
+    if (!form) return;
+
+    form.action = form.action.replace(/\/taches\/([^/]+)$/, '/taches/$1/sejour-bundle');
+    form.querySelector('input[name="status"]')?.remove();
+    form.querySelector('button')?.setAttribute('aria-label', 'Update DNA, JMT, PEAK, SUN and SUNQUEST together');
+  });
 });
 </script>
 @endpush

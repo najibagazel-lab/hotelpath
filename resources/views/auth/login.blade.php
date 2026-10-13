@@ -42,7 +42,7 @@
         .login-frame {
             width: min(1240px, 100%);
             position: relative;
-            padding-top: 0;
+            padding-top: 60px;
         }
 
         .frame-brand {
@@ -227,7 +227,7 @@
 
             .login-frame {
                 height: 100%;
-                padding-top: 0;
+                padding-top: clamp(42px, 7vh, 60px);
                 display: grid;
                 grid-template-rows: minmax(0, 1fr) auto;
             }

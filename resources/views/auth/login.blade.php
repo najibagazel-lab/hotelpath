@@ -94,6 +94,10 @@
 
         .welcome-title { text-align: center; }
 
+        .login-form-panel > h1,
+        .login-form-panel > .form-intro,
+        .login-form-panel > form { transform: translateY(-24px); }
+
         .form-intro {
             margin: 10px 0 25px;
             color: var(--muted);

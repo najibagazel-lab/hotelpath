@@ -24,12 +24,17 @@ class UserAccessController extends Controller
     public function index()
     {
         abort_unless(auth()->user()->role !== 'ENTRY_MANAGER', 403);
-        return view('access.index', ['users' => User::whereIn('role', ['ENTRY_MANAGER', 'CONTRACTING'])->with('platforms')->orderBy('name')->get(), 'platforms' => Platform::where('active', true)->orderBy('name')->get()]);
+        $roles = auth()->user()->role === 'ADMIN'
+            ? ['ADMIN', 'ENTRY_MANAGER', 'CONTRACTING']
+            : ['ENTRY_MANAGER', 'CONTRACTING'];
+
+        return view('access.index', ['users' => User::whereIn('role', $roles)->with('platforms')->orderBy('name')->get(), 'platforms' => Platform::where('active', true)->orderBy('name')->get()]);
     }
 
     public function update(Request $request, User $user)
     {
-        abort_unless(auth()->user()->role !== 'ENTRY_MANAGER' && in_array($user->role, ['ENTRY_MANAGER', 'CONTRACTING'], true), 403);
+        abort_unless(auth()->user()->role !== 'ENTRY_MANAGER' && in_array($user->role, ['ADMIN', 'ENTRY_MANAGER', 'CONTRACTING'], true), 403);
+        abort_if($user->role === 'ADMIN' && auth()->user()->role !== 'ADMIN', 403);
         $data = $request->validate([
             'platform_ids' => 'nullable|array',
             'platform_ids.*' => 'exists:platforms,id',
@@ -62,11 +67,12 @@ class UserAccessController extends Controller
             'name' => 'required|string|max:100',
             'username' => 'required|string|max:50|alpha_dash|unique:users,username',
             'password' => 'required|string',
-            'role' => 'required|in:ENTRY_MANAGER,CONTRACTING',
+            'role' => 'required|in:ADMIN,ENTRY_MANAGER,CONTRACTING',
             'platform_ids' => 'nullable|array',
             'platform_ids.*' => 'exists:platforms,id',
             'sejour_access' => 'nullable|boolean',
         ]);
+        abort_if($data['role'] === 'ADMIN' && auth()->user()->role !== 'ADMIN', 403);
         $selectedPlatformIds = $this->selectedPlatformIds($request, $data);
         $user = User::create(['name' => $data['name'], 'username' => $data['username'], 'email' => $data['username'].'@beslimetravel.local', 'password' => Hash::make($data['password']), 'role' => $data['role'], 'active' => true]);
         $user->platforms()->sync($data['role'] === 'ENTRY_MANAGER' ? $selectedPlatformIds : []);

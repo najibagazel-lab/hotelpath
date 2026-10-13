@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ config('app.name') }}</title><link rel="stylesheet" href="{{ asset('css/app.css') }}"><link rel="stylesheet" href="{{ asset('css/sidebar-active.css') }}"><link rel="stylesheet" href="{{ asset('css/responsive-layout.css') }}"></head>
-<body><aside><div class="brand">{{ \Illuminate\Support\Str::before(config('app.name'), 'Path') }}<span>{{ \Illuminate\Support\Str::after(config('app.name'), 'Hotel') }}</span></div>@if(auth()->user()->role === 'ENTRY_MANAGER')<p class="label">MY WORKSPACE</p>@elseif(auth()->user()->role === 'CONTRACTING')<p class="label">CONTRACTING</p>@endif
+<body><button class="compact-menu-toggle" type="button" aria-label="Open menu">☰</button><aside><div class="brand">{{ \Illuminate\Support\Str::before(config('app.name'), 'Path') }}<span>{{ \Illuminate\Support\Str::after(config('app.name'), 'Hotel') }}</span></div>@if(auth()->user()->role === 'ENTRY_MANAGER')<p class="label">MY WORKSPACE</p>@elseif(auth()->user()->role === 'CONTRACTING')<p class="label">CONTRACTING</p>@endif
 @if(auth()->user()->role === 'ENTRY_MANAGER')
 <a class="{{ request()->routeIs('tasks.index') ? 'active' : '' }}" href="{{ route('tasks.index') }}">My tasks</a><a class="notification-link {{ request()->routeIs('notifications.index') ? 'active' : '' }}" href="{{ route('notifications.index') }}">Notifications @if($unread = auth()->user()->unreadNotifications()->count())<span class="notification-count">{{ $unread }}</span>@endif</a><a class="{{ request()->routeIs('tasks.history') ? 'active' : '' }}" href="{{ route('tasks.history') }}">History</a>
 @elseif(auth()->user()->role === 'CONTRACTING')
@@ -31,4 +31,5 @@
   setInterval(checkNotifications, 10000);
 })();
 document.querySelector('.compact-scroll-down')?.addEventListener('click', () => window.scrollBy({left: window.innerWidth * .8, behavior: 'smooth'}));
+document.querySelector('.compact-menu-toggle')?.addEventListener('click', () => document.body.classList.toggle('compact-menu-open'));
 </script>@stack('scripts')</body></html>

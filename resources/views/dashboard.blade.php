@@ -46,7 +46,7 @@
     </section>
 
     <section class="panel platform-panel">
-        <div class="panel-title"><div><h2>Progress by TO and contract type</h2><p class="muted">Year contracts are included in both Winter and Summer.</p></div></div>
+        <div class="panel-title"><div><h2>Progress by TO and contract type</h2></div></div>
         @foreach($platforms->groupBy('group') as $group => $groupPlatforms)
             @php($sejourBundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'])
             @php($sejourBundlePlatforms = $group === 'SEJOUR' ? $groupPlatforms->filter(fn ($platform) => in_array($platform->label, $sejourBundleLabels)) : collect())

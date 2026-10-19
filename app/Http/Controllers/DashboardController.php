@@ -102,7 +102,11 @@ class DashboardController extends Controller
             ->orderBy('season_id')->orderBy('hotel_id')->get();
         $allowedPlatformIds = auth()->user()->platforms()->pluck('platforms.id')->all();
         $allowedPlatformGroups = $platforms->whereIn('id', $allowedPlatformIds)->pluck('platform_group');
-        $defaultPlatformGroup = $allowedPlatformGroups->contains('SEJOUR') ? 'SEJOUR' : 'PLATFORM';
+        $requestedPlatformGroup = strtoupper((string) $request->input('platform_group'));
+        $defaultPlatformGroup = in_array($requestedPlatformGroup, ['SEJOUR', 'PLATFORM'], true)
+            && $allowedPlatformGroups->contains($requestedPlatformGroup)
+                ? $requestedPlatformGroup
+                : ($allowedPlatformGroups->contains('SEJOUR') ? 'SEJOUR' : 'PLATFORM');
         $toProgress = $platforms->whereIn('id', $allowedPlatformIds)->map(function ($platform) {
             $tasks = ContractTask::where('platform_id', $platform->id)->where('is_active', true)
                 ->where('assigned_user_id', auth()->id())

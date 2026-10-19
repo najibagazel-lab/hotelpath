@@ -8,7 +8,7 @@
 
     @forelse($seasonGroups as $campaignYear => $campaignContracts)
         <section class="season-task-group" data-active-group="{{ $defaultPlatformGroup }}">
-            <div class="season-group-title"><div class="platform-tabs" role="tablist"><button class="{{ $defaultPlatformGroup === 'SEJOUR' ? 'active' : '' }}" type="button" data-platform-tab="SEJOUR">Sejour</button><button class="{{ $defaultPlatformGroup === 'PLATFORM' ? 'active' : '' }}" type="button" data-platform-tab="PLATFORM">Platform</button></div><form class="task-hotel-filter" method="GET"><input name="hotel" value="{{ request('hotel') }}" placeholder="Search hotel" aria-label="Search hotel"></form></div>
+            <div class="season-group-title"><div class="platform-tabs" role="tablist"><button class="{{ $defaultPlatformGroup === 'SEJOUR' ? 'active' : '' }}" type="button" data-platform-tab="SEJOUR">Sejour</button><button class="{{ $defaultPlatformGroup === 'PLATFORM' ? 'active' : '' }}" type="button" data-platform-tab="PLATFORM">Platform</button></div><form class="task-hotel-filter" method="GET"><input type="hidden" name="platform_group" value="{{ $defaultPlatformGroup }}"><input name="hotel" value="{{ request('hotel') }}" placeholder="Search hotel" aria-label="Search hotel"></form></div>
             @if($loop->first)<section class="to-progress"><div class="to-progress-title"><b>TO entry progress</b><small>Entered contracts / received contracts · Year is included in Winter and Summer</small></div><div class="to-progress-list">@foreach($toProgress as $progress)<article class="to-progress-card" data-progress-group="{{ $progress->group }}"><span>{{ $progress->label }}</span><div class="to-progress-season"><b>Winter</b><strong>{{ $progress->winterEntered }}<i>/</i>{{ $progress->winterReceived }}</strong></div><div class="to-progress-season"><b>Summer</b><strong>{{ $progress->summerEntered }}<i>/</i>{{ $progress->summerReceived }}</strong></div><small>entered / received</small></article>@endforeach</div></section>@endif
             @php($platformGroups = $platforms->groupBy(fn ($platform) => $platform->platform_group ?? 'OTHER'))
             @php($sejourBundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'])
@@ -96,6 +96,8 @@ document.querySelectorAll('.season-task-group').forEach(section => {
   const setGroup = group => {
     board.dataset.activeGroup = group;
     section.dataset.activeGroup = group;
+    const groupInput = section.querySelector('input[name="platform_group"]');
+    if (groupInput) groupInput.value = group;
     board.querySelectorAll('[data-platform-group]').forEach(cell => cell.classList.toggle('platform-hidden', cell.dataset.platformGroup !== group));
     section.querySelectorAll('[data-platform-tab]').forEach(button => button.classList.toggle('active', button.dataset.platformTab === group));
   };

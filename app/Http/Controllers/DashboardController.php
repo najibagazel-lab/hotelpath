@@ -98,7 +98,6 @@ class DashboardController extends Controller
             ->where('purchase_contract_received', true)
             ->whereHas('season', fn ($season) => $season->current())
             ->whereHas('tasks', fn ($task) => $task->where('is_active', true)->where('assigned_user_id', auth()->id()))
-            ->when($request->filled('hotel'), fn ($query) => $query->whereHas('hotel', fn ($hotel) => $hotel->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->hotel).'%'])))
             ->orderBy('season_id')->orderBy('hotel_id')->get();
         $allowedPlatformIds = auth()->user()->platforms()->pluck('platforms.id')->all();
         $allowedPlatformGroups = $platforms->whereIn('id', $allowedPlatformIds)->pluck('platform_group');

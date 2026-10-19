@@ -106,6 +106,12 @@ class DashboardController extends Controller
             && $allowedPlatformGroups->contains($requestedPlatformGroup)
                 ? $requestedPlatformGroup
                 : ($allowedPlatformGroups->contains('SEJOUR') ? 'SEJOUR' : 'PLATFORM');
+        $sejourBundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'];
+        $sejourBundlePlatformIds = $platforms
+            ->where('platform_group', 'SEJOUR')
+            ->filter(fn ($platform) => in_array($platform->label ?? $platform->name, $sejourBundleLabels, true))
+            ->pluck('id');
+
         $toProgress = $platforms->whereIn('id', $allowedPlatformIds)->map(function ($platform) {
             $tasks = ContractTask::where('platform_id', $platform->id)->where('is_active', true)
                 ->where('assigned_user_id', auth()->id())
@@ -118,12 +124,49 @@ class DashboardController extends Controller
             return (object) [
                 'label' => $platform->label ?? $platform->name,
                 'group' => $platform->platform_group ?? 'OTHER',
+                'bundle' => false,
                 'winterReceived' => (clone $winterTasks)->count(),
                 'winterEntered' => (clone $winterTasks)->where('status', 'COMPLETED')->count(),
                 'summerReceived' => (clone $summerTasks)->count(),
                 'summerEntered' => (clone $summerTasks)->where('status', 'COMPLETED')->count(),
             ];
         });
+
+        // DNA, JMT, PEAK, SUN and SUNQUEST are one shared Sejour entry.
+        // Display and count them as one contract, not five separate TO tasks.
+        $sejourBundleProgress = collect([
+            ['types' => ['WINTER', 'YEAR'], 'received' => 'winterReceived', 'entered' => 'winterEntered'],
+            ['types' => ['SUMMER', 'YEAR'], 'received' => 'summerReceived', 'entered' => 'summerEntered'],
+        ])->reduce(function ($progress, $definition) use ($contracts, $sejourBundlePlatformIds) {
+            $bundleContracts = $contracts
+                ->filter(fn ($contract) => in_array($contract->season->contract_type, $definition['types'], true))
+                ->filter(fn ($contract) => $contract->tasks->where('is_active', true)
+                    ->whereIn('platform_id', $sejourBundlePlatformIds)
+                    ->contains(fn ($task) => $task->assigned_user_id === auth()->id()));
+
+            $progress->{$definition['received']} = $bundleContracts->count();
+            $progress->{$definition['entered']} = $bundleContracts->filter(function ($contract) use ($sejourBundlePlatformIds) {
+                $bundleTasks = $contract->tasks->where('is_active', true)->whereIn('platform_id', $sejourBundlePlatformIds);
+
+                return $bundleTasks->count() === $sejourBundlePlatformIds->count()
+                    && $bundleTasks->every(fn ($task) => $task->status === 'COMPLETED');
+            })->count();
+
+            return $progress;
+        }, (object) [
+            'label' => 'Sejour: DNA / JMT / PEAK / SUN / SQ',
+            'group' => 'SEJOUR',
+            'bundle' => true,
+            'winterReceived' => 0,
+            'winterEntered' => 0,
+            'summerReceived' => 0,
+            'summerEntered' => 0,
+        ]);
+
+        $toProgress = collect([$sejourBundleProgress])->concat(
+            $toProgress->reject(fn ($progress) => $progress->group === 'SEJOUR'
+                && in_array($progress->label, $sejourBundleLabels, true))
+        )->values();
         $hotels = Hotel::where('active', true)->orderBy('name')->get();
         $seasons = Season::where('active', true)->whereNull('hotel_id')->orderBy('start_date')->get();
         // Winter 2026/2027 and Summer 2027 belong to one campaign (2027).

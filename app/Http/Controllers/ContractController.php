@@ -99,12 +99,7 @@ class ContractController extends Controller
     private function redirectToTasks(Request $request)
     {
         $query = [];
-        $hotel = trim((string) $request->input('hotel'));
         $platformGroup = strtoupper((string) $request->input('platform_group'));
-
-        if ($hotel !== '') {
-            $query['hotel'] = $hotel;
-        }
 
         if (in_array($platformGroup, ['SEJOUR', 'PLATFORM'], true)) {
             $query['platform_group'] = $platformGroup;

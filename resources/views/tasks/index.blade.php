@@ -106,6 +106,9 @@ document.querySelectorAll('.season-task-group').forEach(section => {
   setGroup(board.dataset.activeGroup);
 });
 document.querySelectorAll('.task-hotel-filter input[name="hotel"]').forEach(input => {
+  const storageKey = 'hotelTaskFilter';
+  const savedFilter = sessionStorage.getItem(storageKey);
+  if (input.value === '' && savedFilter !== null) input.value = savedFilter;
   const filterRows = () => {
     const term = input.value.trim().toLowerCase();
     document.querySelectorAll('[data-hotel-task-row]').forEach(row => {
@@ -114,7 +117,11 @@ document.querySelectorAll('.task-hotel-filter input[name="hotel"]').forEach(inpu
   };
   input.form?.addEventListener('submit', event => event.preventDefault());
   input.addEventListener('input', filterRows);
-  input.addEventListener('input', () => document.querySelectorAll('.task-filter-context').forEach(context => context.value = input.value.trim()));
+  input.addEventListener('input', () => {
+    const value = input.value.trim();
+    sessionStorage.setItem(storageKey, value);
+    document.querySelectorAll('.task-filter-context').forEach(context => context.value = value);
+  });
   filterRows();
 });
 document.querySelectorAll('form[action*="/taches/"]').forEach(form => {
@@ -124,7 +131,9 @@ document.querySelectorAll('form[action*="/taches/"]').forEach(form => {
     const hotelContext = form.querySelector('.task-filter-context');
     const platformContext = form.querySelector('.task-platform-context');
 
-    if (hotelContext) hotelContext.value = hotelFilter?.value.trim() ?? '';
+    const hotelValue = hotelFilter?.value.trim() ?? '';
+    sessionStorage.setItem('hotelTaskFilter', hotelValue);
+    if (hotelContext) hotelContext.value = hotelValue;
     if (platformContext && activeTab) platformContext.value = activeTab.dataset.platformTab;
   });
 });

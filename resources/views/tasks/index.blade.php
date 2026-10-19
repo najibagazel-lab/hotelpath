@@ -117,5 +117,16 @@ document.querySelectorAll('.task-hotel-filter input[name="hotel"]').forEach(inpu
   input.addEventListener('input', () => document.querySelectorAll('.task-filter-context').forEach(context => context.value = input.value.trim()));
   filterRows();
 });
+document.querySelectorAll('form[action*="/taches/"]').forEach(form => {
+  form.addEventListener('submit', () => {
+    const hotelFilter = document.querySelector('.task-hotel-filter input[name="hotel"]');
+    const activeTab = document.querySelector('.platform-tabs button.active');
+    const hotelContext = form.querySelector('.task-filter-context');
+    const platformContext = form.querySelector('.task-platform-context');
+
+    if (hotelContext) hotelContext.value = hotelFilter?.value.trim() ?? '';
+    if (platformContext && activeTab) platformContext.value = activeTab.dataset.platformTab;
+  });
+});
 </script>
 @endpush

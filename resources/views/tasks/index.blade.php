@@ -15,7 +15,7 @@
             <div class="employee-board grouped-platform-board" data-active-group="{{ $defaultPlatformGroup }}"><table><thead><tr><th rowspan="2" class="hotel-column">Hotel</th><th rowspan="2" class="season-column">Season</th>@foreach($platformGroups as $group => $groupPlatforms)<th class="platform-group-title" data-platform-group="{{ $group }}" colspan="{{ $groupPlatforms->count() }}">{{ $group === 'PLATFORM' ? 'Platform' : ucfirst(strtolower($group)) }}</th>@endforeach</tr><tr>@foreach($platformGroups as $group => $groupPlatforms) @foreach($groupPlatforms as $platform)<th class="platform-column-title" data-platform-group="{{ $group }}">{{ $platform->label ?? $platform->name }}</th>@endforeach @endforeach</tr></thead><tbody>
                 @foreach($campaignContracts->groupBy('hotel_id') as $hotelContracts)
                     @foreach($hotelContracts as $contract)
-                        <tr>
+                        <tr data-hotel-task-row data-hotel-name="{{ strtolower($contract->hotel->name) }}">
                             @if($loop->first)<td rowspan="{{ $hotelContracts->count() }}" class="grouped-hotel-name">{{ $contract->hotel->name }}</td>@endif
                             @php(preg_match('/^(Winter|Summer|Year)/i', $contract->season->name, $seasonMatch))
                             @php($seasonType = $contract->season->contract_type ?? strtoupper($seasonMatch[1] ?? 'PERIOD'))
@@ -104,9 +104,16 @@ document.querySelectorAll('.season-task-group').forEach(section => {
   section.querySelectorAll('[data-platform-tab]').forEach(button => button.onclick = () => setGroup(button.dataset.platformTab));
   setGroup(board.dataset.activeGroup);
 });
-document.querySelectorAll('.task-hotel-filter input').forEach(input => {
-  let timer;
-  input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => input.form.submit(), 300); });
+document.querySelectorAll('.task-hotel-filter input[name="hotel"]').forEach(input => {
+  const filterRows = () => {
+    const term = input.value.trim().toLowerCase();
+    document.querySelectorAll('[data-hotel-task-row]').forEach(row => {
+      row.hidden = term !== '' && !row.dataset.hotelName.includes(term);
+    });
+  };
+  input.form?.addEventListener('submit', event => event.preventDefault());
+  input.addEventListener('input', filterRows);
+  filterRows();
 });
 </script>
 @endpush

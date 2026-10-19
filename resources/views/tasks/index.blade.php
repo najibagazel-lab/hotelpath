@@ -27,7 +27,7 @@
                                 @php($allowed = in_array($platform->id, $allowedPlatformIds) && $task && $task->assigned_user_id === auth()->id())
                                 <td class="employee-check" data-platform-group="{{ $group }}">
                                     @if($task && $allowed)
-                                        <form method="POST" action="{{ route('tasks.update', $task) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="{{ $task->status === 'COMPLETED' ? 'PENDING' : 'COMPLETED' }}"><button class="matrix-check {{ $task->status === 'COMPLETED' ? 'checked' : '' }}" aria-label="Update {{ $platform->name }}">{{ $task->status === 'COMPLETED' ? '✓' : '' }}</button></form>
+                                        <form method="POST" action="{{ route('tasks.update', $task) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="{{ $task->status === 'COMPLETED' ? 'PENDING' : 'COMPLETED' }}"><input type="hidden" name="hotel" class="task-filter-context" value="{{ request('hotel') }}"><input type="hidden" name="platform_group" class="task-platform-context" value="{{ $defaultPlatformGroup }}"><button class="matrix-check {{ $task->status === 'COMPLETED' ? 'checked' : '' }}" aria-label="Update {{ $platform->name }}">{{ $task->status === 'COMPLETED' ? '✓' : '' }}</button></form>
                                     @elseif($task)
                                         <span class="matrix-check locked {{ $task->status === 'COMPLETED' ? 'checked' : '' }}">{{ $task->status === 'COMPLETED' ? '✓' : '' }}</span>
                                     @else
@@ -42,7 +42,7 @@
                                     <td class="employee-check sejour-bundle-check" data-platform-group="SEJOUR" colspan="{{ count($sejourBundleLabels) }}">
                                         @if($bundleAllowed)
                                             @php($dnaTask = $bundleTasks->firstWhere('platform_id', $bundlePlatforms->firstWhere('label', 'DNA')->id))
-                                            <form method="POST" action="{{ route('tasks.sejour-bundle.update', $dnaTask) }}">@csrf @method('PATCH')<button class="matrix-check {{ $bundleCompleted ? 'checked' : '' }}" aria-label="Update DNA, JMT, PEAK, SUN and SUNQUEST together">{{ $bundleCompleted ? 'âœ“' : '' }}</button></form>
+                                            <form method="POST" action="{{ route('tasks.sejour-bundle.update', $dnaTask) }}">@csrf @method('PATCH')<input type="hidden" name="hotel" class="task-filter-context" value="{{ request('hotel') }}"><input type="hidden" name="platform_group" class="task-platform-context" value="{{ $defaultPlatformGroup }}"><button class="matrix-check {{ $bundleCompleted ? 'checked' : '' }}" aria-label="Update DNA, JMT, PEAK, SUN and SUNQUEST together">{{ $bundleCompleted ? 'âœ“' : '' }}</button></form>
                                         @else
                                             <span class="matrix-check locked {{ $bundleCompleted ? 'checked' : '' }}">{{ $bundleCompleted ? 'âœ“' : '' }}</span>
                                         @endif
@@ -98,6 +98,7 @@ document.querySelectorAll('.season-task-group').forEach(section => {
     section.dataset.activeGroup = group;
     const groupInput = section.querySelector('input[name="platform_group"]');
     if (groupInput) groupInput.value = group;
+    document.querySelectorAll('.task-platform-context').forEach(input => input.value = group);
     board.querySelectorAll('[data-platform-group]').forEach(cell => cell.classList.toggle('platform-hidden', cell.dataset.platformGroup !== group));
     section.querySelectorAll('[data-platform-tab]').forEach(button => button.classList.toggle('active', button.dataset.platformTab === group));
   };
@@ -113,6 +114,7 @@ document.querySelectorAll('.task-hotel-filter input[name="hotel"]').forEach(inpu
   };
   input.form?.addEventListener('submit', event => event.preventDefault());
   input.addEventListener('input', filterRows);
+  input.addEventListener('input', () => document.querySelectorAll('.task-filter-context').forEach(context => context.value = input.value.trim()));
   filterRows();
 });
 </script>

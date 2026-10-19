@@ -43,13 +43,13 @@ class ContractController extends Controller
         $status=$request->validate(['status'=>'required|in:PENDING,IN_PROGRESS,COMPLETED,BLOCKED'])['status'];
         $task->update(['status'=>$status,'completed_at'=>$status==='COMPLETED'?now():null,'completed_by'=>$status==='COMPLETED'?auth()->id():null]);
         ActivityLog::create(['user_id'=>auth()->id(),'contract_id'=>$task->contract_id,'platform_id'=>$task->platform_id,'action'=>'STATUT_MODIFIE','details'=>"Statut défini sur {$status}"]);
-        return back()->with('success','Statut mis à jour.');
+        return $this->redirectToTasks($request)->with('success','Statut mis à jour.');
     }
 
     /**
      * The five core Sejour TOs are entered together operationally.
      */
-    public function updateSejourBundle(ContractTask $task)
+    public function updateSejourBundle(Request $request, ContractTask $task)
     {
         $bundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'];
         $contract = $task->contract;
@@ -93,7 +93,24 @@ class ContractController extends Controller
             ]);
         });
 
-        return back()->with('success', 'The Sejour bundle was updated.');
+        return $this->redirectToTasks($request)->with('success', 'The Sejour bundle was updated.');
+    }
+
+    private function redirectToTasks(Request $request)
+    {
+        $query = [];
+        $hotel = trim((string) $request->input('hotel'));
+        $platformGroup = strtoupper((string) $request->input('platform_group'));
+
+        if ($hotel !== '') {
+            $query['hotel'] = $hotel;
+        }
+
+        if (in_array($platformGroup, ['SEJOUR', 'PLATFORM'], true)) {
+            $query['platform_group'] = $platformGroup;
+        }
+
+        return redirect()->route('tasks.index', $query);
     }
 
     public function destroy(Contract $contract)

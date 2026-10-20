@@ -192,13 +192,13 @@
             border: 0;
             border-radius: 12px;
             color: #fff;
-            background: #2458d9;
-            box-shadow: 0 10px 20px rgba(36, 88, 217, .24);
+            background: var(--teal);
+            box-shadow: 0 10px 20px rgba(27, 122, 107, .24);
             font: 800 17px "Nunito", sans-serif;
             cursor: pointer;
         }
 
-        .login-button:hover { background: #1848c0; }
+        .login-button:hover { background: var(--teal-dark); }
 
         .login-error {
             margin: 0;

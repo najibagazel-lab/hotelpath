@@ -95,7 +95,7 @@
 
         .login-form-panel h1 {
             margin: 0;
-            color: var(--teal);
+            color: var(--navy);
             font: 900 clamp(42px, 3.2vw, 52px)/1.03 "Nunito", sans-serif;
             letter-spacing: -1.8px;
         }

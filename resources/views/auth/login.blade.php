@@ -79,15 +79,6 @@
             background: #fff;
         }
 
-        .form-brand {
-            margin: 0 0 30px;
-            color: var(--navy);
-            font: 900 25px/1 "Nunito", sans-serif;
-            letter-spacing: -1.4px;
-        }
-
-        .form-brand b { color: #2dbe9e; }
-
         .agency-logo {
             display: block;
             width: 112px;
@@ -250,7 +241,6 @@
 
         @media (min-width: 1101px) and (max-height: 760px) {
             .agency-logo { width: clamp(88px, 14vh, 112px); margin-bottom: clamp(12px, 2.8vh, 25px); }
-            .form-brand { margin-bottom: clamp(14px, 3vh, 30px); font-size: clamp(21px, 3vh, 25px); }
             .login-form-panel h1 { font-size: clamp(34px, 5.6vh, 52px); }
             .form-intro { margin: clamp(7px, 1.8vh, 12px) 0 clamp(14px, 3.8vh, 30px); font-size: clamp(13px, 2.2vh, 16px); }
             .login-form-panel form { gap: clamp(5px, 1.5vh, 11px); }
@@ -280,7 +270,6 @@
                 padding: clamp(32px, 7vh, 54px) 42px;
             }
 
-            .form-brand { margin-bottom: 30px; }
             .agency-logo { margin-bottom: 22px; }
 
             .login-frame footer { text-align: center; }
@@ -290,7 +279,6 @@
             .login-stage { padding: 18px; }
             .login-form-panel { padding: clamp(26px, 6vh, 42px) 25px; }
             .login-form-panel h1 { font-size: 38px; }
-            .form-brand { font-size: 23px; margin-bottom: 27px; }
             .agency-logo { width: 104px; margin-bottom: 22px; }
         }
     </style>
@@ -302,7 +290,6 @@
             <div class="login-outline">
                 <section class="login-form-panel">
                     <img class="agency-logo" src="{{ asset('images/beslimetravel-logo.png') }}" alt="BTT Beslime Travel">
-                    <p class="form-brand">Hotel<b>Path</b></p>
                     <h1 class="welcome-title">Welcome</h1>
                     <p class="form-intro">Access your hotel contract workspace.</p>
 

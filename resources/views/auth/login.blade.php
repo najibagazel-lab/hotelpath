@@ -36,13 +36,13 @@
             min-height: 100vh;
             display: grid;
             place-items: center;
-            padding: 40px;
+            padding: clamp(28px, 7vh, 72px) clamp(24px, 5vw, 80px);
         }
 
         .login-frame {
-            width: min(1240px, 100%);
+            width: min(1320px, 100%);
             position: relative;
-            padding-top: 60px;
+            padding: 0;
         }
 
         .frame-brand {
@@ -59,13 +59,13 @@
 
         .login-outline {
             display: grid;
-            grid-template-columns: minmax(390px, 38%) minmax(0, 62%);
-            min-height: 528px;
+            grid-template-columns: minmax(0, 58%) minmax(420px, 42%);
+            min-height: min(720px, calc(100dvh - 120px));
             overflow: hidden;
             background: #fff;
-            border: 1px solid #e1eaf2;
-            border-radius: 22px;
-            box-shadow: 0 22px 46px rgba(26, 53, 81, .12);
+            border: 0;
+            border-radius: 28px;
+            box-shadow: 0 28px 65px rgba(26, 53, 81, .16);
         }
 
         .login-form-panel {
@@ -74,9 +74,19 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 54px 42px;
+            order: 2;
+            padding: clamp(50px, 8vh, 92px) clamp(44px, 5vw, 76px);
             background: #fff;
         }
+
+        .form-brand {
+            margin: 0 0 48px;
+            color: var(--navy);
+            font: 900 31px/1 "Nunito", sans-serif;
+            letter-spacing: -1.4px;
+        }
+
+        .form-brand b { color: #2dbe9e; }
 
         .form-eyebrow {
             margin: 0 0 9px;
@@ -88,45 +98,41 @@
         .login-form-panel h1 {
             margin: 0;
             color: var(--navy);
-            font: 900 38px/1.05 "Nunito", sans-serif;
-            letter-spacing: -1px;
+            font: 900 clamp(42px, 3.2vw, 52px)/1.03 "Nunito", sans-serif;
+            letter-spacing: -1.8px;
         }
 
-        .welcome-title { text-align: center; }
-
-        .login-form-panel > h1,
-        .login-form-panel > .form-intro,
-        .login-form-panel > form { transform: translateY(-24px); }
+        .welcome-title { text-align: left; }
 
         .form-intro {
-            margin: 10px 0 25px;
+            margin: 12px 0 30px;
             color: var(--muted);
-            font-size: 14px;
-            text-align: center;
+            font-size: 16px;
+            text-align: left;
         }
 
         .login-form-panel form {
             display: grid;
-            gap: 9px;
+            gap: 11px;
         }
 
         .login-form-panel label:not(.remember-row) {
-            margin-top: 5px;
+            margin-top: 6px;
             color: var(--navy);
-            font: 800 12px "Nunito", sans-serif;
+            font: 800 13px "Nunito", sans-serif;
         }
 
         .login-form-panel input[type="text"],
         .password-field input {
             width: 100%;
-            height: 45px;
-            padding: 0 13px;
+            height: 55px;
+            padding: 0 16px;
             color: var(--navy);
-            background: #eaf1fb;
-            border: 1px solid #cad8e8;
-            border-radius: 8px;
+            background: #f4f7fc;
+            border: 1px solid #d4e0ef;
+            border-radius: 12px;
             outline: none;
-            font: 600 14px "Hanken Grotesk", sans-serif;
+            font: 600 16px "Hanken Grotesk", sans-serif;
         }
 
         .login-form-panel input:focus {
@@ -141,7 +147,7 @@
         .password-toggle {
             position: absolute;
             top: 50%;
-            right: 10px;
+            right: 14px;
             width: 28px;
             height: 28px;
             padding: 5px;
@@ -164,7 +170,7 @@
             gap: 8px;
             margin: 4px 0;
             color: var(--muted);
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .remember-row input {
@@ -175,17 +181,17 @@
         }
 
         .login-button {
-            height: 46px;
+            height: 56px;
             border: 0;
-            border-radius: 9px;
+            border-radius: 12px;
             color: #fff;
-            background: var(--teal);
-            box-shadow: 0 9px 18px rgba(27, 122, 107, .2);
-            font: 800 15px "Nunito", sans-serif;
+            background: #2458d9;
+            box-shadow: 0 10px 20px rgba(36, 88, 217, .24);
+            font: 800 17px "Nunito", sans-serif;
             cursor: pointer;
         }
 
-        .login-button:hover { background: var(--teal-dark); }
+        .login-button:hover { background: #1848c0; }
 
         .login-error {
             margin: 0;
@@ -198,6 +204,7 @@
             z-index: 1;
             display: grid;
             place-items: center;
+            order: 1;
             min-width: 0;
             overflow: hidden;
             background: #dcebf1;
@@ -214,10 +221,7 @@
         }
 
         .login-frame footer {
-            margin-top: 10px;
-            color: #68809c;
-            text-align: right;
-            font-size: 10px;
+            display: none;
         }
 
         @media (min-width: 1101px) {
@@ -226,24 +230,20 @@
             .login-stage {
                 min-height: 0;
                 height: 100dvh;
-                padding: clamp(14px, 3vh, 40px) 40px;
+                padding: clamp(28px, 7vh, 72px) clamp(24px, 5vw, 80px);
             }
 
             .login-frame {
-                height: 100%;
-                padding-top: clamp(42px, 7vh, 60px);
-                display: grid;
-                grid-template-rows: minmax(0, 1fr) auto;
+                height: auto;
             }
 
-            .login-outline { min-height: 0; height: auto; }
-            .login-form-panel { padding: clamp(28px, 6vh, 54px) 42px; }
-            .login-frame footer { margin-top: 8px; }
+            .login-outline { min-height: min(720px, calc(100dvh - 120px)); }
+            .login-form-panel { padding: clamp(50px, 8vh, 92px) clamp(44px, 5vw, 76px); }
         }
 
         @media (min-width: 1101px) and (max-height: 700px) {
             .login-frame {
-                transform: translateY(-75px) scale(.88);
+                transform: scale(.88);
                 transform-origin: center;
             }
         }
@@ -252,8 +252,8 @@
             .login-stage { padding: 28px 20px; }
 
             .login-frame {
-                max-width: 480px;
-                padding-top: 54px;
+                max-width: 560px;
+                padding: 0;
             }
 
             .login-outline {
@@ -264,9 +264,11 @@
             .hotel-illustration { display: none; }
 
             .login-form-panel {
-                min-height: 500px;
-                padding: 48px 38px;
+                min-height: 590px;
+                padding: 54px 42px;
             }
+
+            .form-brand { margin-bottom: 42px; }
 
             .login-frame footer { text-align: center; }
         }
@@ -274,7 +276,8 @@
         @media (max-width: 480px) {
             .login-stage { padding: 18px; }
             .login-form-panel { padding: 42px 25px; }
-            .login-form-panel h1 { font-size: 34px; }
+            .login-form-panel h1 { font-size: 38px; }
+            .form-brand { font-size: 27px; margin-bottom: 34px; }
         }
     </style>
 </head>
@@ -284,6 +287,7 @@
         <section class="login-frame">
             <div class="login-outline">
                 <section class="login-form-panel">
+                    <p class="form-brand">Hotel<b>Path</b></p>
                     <h1 class="welcome-title">Welcome</h1>
                     <p class="form-intro">Access your hotel contract workspace.</p>
 

@@ -80,13 +80,20 @@
         }
 
         .form-brand {
-            margin: 0 0 48px;
+            margin: 0 0 30px;
             color: var(--navy);
             font: 900 31px/1 "Nunito", sans-serif;
             letter-spacing: -1.4px;
         }
 
         .form-brand b { color: #2dbe9e; }
+
+        .agency-logo {
+            display: block;
+            width: 142px;
+            height: auto;
+            margin: 0 0 25px;
+        }
 
         .form-eyebrow {
             margin: 0 0 9px;
@@ -268,7 +275,7 @@
                 padding: 54px 42px;
             }
 
-            .form-brand { margin-bottom: 42px; }
+            .form-brand { margin-bottom: 30px; }
 
             .login-frame footer { text-align: center; }
         }
@@ -277,7 +284,8 @@
             .login-stage { padding: 18px; }
             .login-form-panel { padding: 42px 25px; }
             .login-form-panel h1 { font-size: 38px; }
-            .form-brand { font-size: 27px; margin-bottom: 34px; }
+            .form-brand { font-size: 27px; margin-bottom: 27px; }
+            .agency-logo { width: 126px; margin-bottom: 22px; }
         }
     </style>
 </head>
@@ -287,6 +295,7 @@
         <section class="login-frame">
             <div class="login-outline">
                 <section class="login-form-panel">
+                    <img class="agency-logo" src="{{ asset('images/beslimetravel-logo.png') }}" alt="BTT Beslime Travel">
                     <p class="form-brand">Hotel<b>Path</b></p>
                     <h1 class="welcome-title">Welcome</h1>
                     <p class="form-intro">Access your hotel contract workspace.</p>

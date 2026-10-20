@@ -237,22 +237,27 @@
             .login-stage {
                 min-height: 0;
                 height: 100dvh;
-                padding: clamp(28px, 7vh, 72px) clamp(24px, 5vw, 80px);
+                padding: clamp(16px, 4vh, 56px) clamp(24px, 5vw, 80px);
             }
 
             .login-frame {
-                height: auto;
+                height: min(720px, calc(100dvh - 32px));
             }
 
-            .login-outline { min-height: min(720px, calc(100dvh - 120px)); }
-            .login-form-panel { padding: clamp(50px, 8vh, 92px) clamp(44px, 5vw, 76px); }
+            .login-outline { min-height: 0; height: 100%; }
+            .login-form-panel { padding: clamp(24px, 6vh, 76px) clamp(38px, 5vw, 76px); }
         }
 
-        @media (min-width: 1101px) and (max-height: 700px) {
-            .login-frame {
-                transform: scale(.88);
-                transform-origin: center;
-            }
+        @media (min-width: 1101px) and (max-height: 760px) {
+            .agency-logo { width: clamp(96px, 15vh, 142px); margin-bottom: clamp(12px, 2.8vh, 25px); }
+            .form-brand { margin-bottom: clamp(14px, 3vh, 30px); font-size: clamp(24px, 3.6vh, 31px); }
+            .login-form-panel h1 { font-size: clamp(34px, 5.6vh, 52px); }
+            .form-intro { margin: clamp(7px, 1.8vh, 12px) 0 clamp(14px, 3.8vh, 30px); font-size: clamp(13px, 2.2vh, 16px); }
+            .login-form-panel form { gap: clamp(5px, 1.5vh, 11px); }
+            .login-form-panel label:not(.remember-row) { margin-top: 2px; font-size: clamp(11px, 1.8vh, 13px); }
+            .login-form-panel input[type="text"], .password-field input { height: clamp(40px, 7vh, 55px); font-size: clamp(13px, 2.2vh, 16px); }
+            .remember-row { margin: 1px 0; font-size: clamp(11px, 1.8vh, 13px); }
+            .login-button { height: clamp(42px, 7vh, 56px); font-size: clamp(14px, 2.3vh, 17px); }
         }
 
         @media (max-width: 1100px) {
@@ -271,8 +276,8 @@
             .hotel-illustration { display: none; }
 
             .login-form-panel {
-                min-height: 590px;
-                padding: 54px 42px;
+                min-height: min(590px, calc(100dvh - 36px));
+                padding: clamp(32px, 7vh, 54px) 42px;
             }
 
             .form-brand { margin-bottom: 30px; }
@@ -282,7 +287,7 @@
 
         @media (max-width: 480px) {
             .login-stage { padding: 18px; }
-            .login-form-panel { padding: 42px 25px; }
+            .login-form-panel { padding: clamp(26px, 6vh, 42px) 25px; }
             .login-form-panel h1 { font-size: 38px; }
             .form-brand { font-size: 27px; margin-bottom: 27px; }
             .agency-logo { width: 126px; margin-bottom: 22px; }

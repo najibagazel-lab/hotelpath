@@ -24,7 +24,7 @@
             margin: 0;
             min-width: 320px;
             min-height: 100vh;
-            color: var(--navy);
+            color: var(--teal);
             background:
                 radial-gradient(circle at 94% 8%, #dce6f4 0 88px, transparent 89px),
                 radial-gradient(circle at 7% 92%, #d8f1ed 0 90px, transparent 91px),

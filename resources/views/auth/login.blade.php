@@ -24,7 +24,7 @@
             margin: 0;
             min-width: 320px;
             min-height: 100vh;
-            color: var(--teal);
+            color: var(--navy);
             background:
                 radial-gradient(circle at 94% 8%, #dce6f4 0 88px, transparent 89px),
                 radial-gradient(circle at 7% 92%, #d8f1ed 0 90px, transparent 91px),
@@ -95,7 +95,7 @@
 
         .login-form-panel h1 {
             margin: 0;
-            color: var(--navy);
+            color: var(--teal);
             font: 900 clamp(42px, 3.2vw, 52px)/1.03 "Nunito", sans-serif;
             letter-spacing: -1.8px;
         }
@@ -329,12 +329,10 @@
                         <button class="login-button" type="submit">Login</button>
                     </form>
                 </section>
-
                 <section class="hotel-illustration" aria-label="Hotel contract illustration">
                     @php echo file_get_contents(public_path('images/login-scene.svg')); @endphp
                 </section>
             </div>
-
             <footer>HotelPath · Hotel contract tracking</footer>
         </section>
     </main>

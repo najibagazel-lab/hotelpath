@@ -59,7 +59,7 @@
 
         .login-outline {
             display: grid;
-            grid-template-columns: minmax(0, 58%) minmax(420px, 42%);
+            grid-template-columns: minmax(420px, 42%) minmax(0, 58%);
             min-height: min(720px, calc(100dvh - 120px));
             overflow: hidden;
             background: #fff;
@@ -74,7 +74,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            order: 2;
+            order: 1;
             padding: clamp(50px, 8vh, 92px) clamp(44px, 5vw, 76px);
             background: #fff;
         }
@@ -204,7 +204,7 @@
             z-index: 1;
             display: grid;
             place-items: center;
-            order: 1;
+            order: 2;
             min-width: 0;
             overflow: hidden;
             background: #dcebf1;

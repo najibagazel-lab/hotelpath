@@ -89,10 +89,12 @@
         .form-brand b { color: #2dbe9e; }
 
         .agency-logo {
-            display: block;
+            position: absolute;
+            top: clamp(44px, 8vh, 76px);
+            right: clamp(28px, 4vw, 58px);
             width: 142px;
             height: auto;
-            margin: 0 0 25px;
+            margin: 0;
         }
 
         .form-eyebrow {
@@ -281,6 +283,7 @@
             }
 
             .form-brand { margin-bottom: 30px; }
+            .agency-logo { position: static; margin: 0 0 22px; }
 
             .login-frame footer { text-align: center; }
         }

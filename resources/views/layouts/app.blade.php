@@ -32,4 +32,19 @@
 })();
 document.querySelector('.compact-scroll-down')?.addEventListener('click', () => window.scrollBy({left: window.innerWidth * .8, behavior: 'smooth'}));
 document.querySelector('.compact-menu-toggle')?.addEventListener('click', () => document.body.classList.toggle('compact-menu-open'));
+const brandLink = document.querySelector('aside .brand');
+if (brandLink) {
+  const goToDashboard = () => window.location.href = '{{ route('dashboard') }}';
+  brandLink.style.cursor = 'pointer';
+  brandLink.tabIndex = 0;
+  brandLink.setAttribute('role', 'link');
+  brandLink.setAttribute('aria-label', 'Go to Agent entry tracking');
+  brandLink.addEventListener('click', goToDashboard);
+  brandLink.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      goToDashboard();
+    }
+  });
+}
 </script>@stack('scripts')</body></html>

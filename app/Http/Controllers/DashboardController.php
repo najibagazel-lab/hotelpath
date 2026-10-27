@@ -93,12 +93,6 @@ class DashboardController extends Controller
             ->orderByRaw("CASE platform_group WHEN 'SEJOUR' THEN 1 WHEN 'PLATFORM' THEN 2 ELSE 3 END")
             ->orderByRaw("CASE WHEN platform_group = 'SEJOUR' THEN CASE label WHEN 'DNA' THEN 1 WHEN 'JMT' THEN 2 WHEN 'PEAK' THEN 3 WHEN 'SUN' THEN 4 WHEN 'SUNQUEST' THEN 5 WHEN 'HEY TRIP' THEN 6 WHEN 'AURUM' THEN 7 WHEN 'PAXIMUM' THEN 8 ELSE 99 END WHEN platform_group = 'PLATFORM' THEN CASE label WHEN 'DNA' THEN 1 WHEN 'PEAK' THEN 2 WHEN 'SUN' THEN 3 WHEN 'SUNQUEST' THEN 4 WHEN 'JMT' THEN 5 WHEN 'BBX ONLINE' THEN 6 WHEN 'HEY TRIP' THEN 7 ELSE 99 END ELSE 99 END")
             ->get();
-        // Use the same active-period rule as Contract receipt follow-up.
-        $contracts = Contract::with(['hotel', 'season', 'tasks.platform'])
-            ->where('purchase_contract_received', true)
-            ->whereHas('season', fn ($season) => $season->current())
-            ->whereHas('tasks', fn ($task) => $task->where('is_active', true)->where('assigned_user_id', auth()->id()))
-            ->orderBy('season_id')->orderBy('hotel_id')->get();
         $allowedPlatformIds = auth()->user()->platforms()->pluck('platforms.id')->all();
         $allowedPlatformGroups = $platforms->whereIn('id', $allowedPlatformIds)->pluck('platform_group');
         $requestedPlatformGroup = strtoupper((string) $request->input('platform_group'));
@@ -106,6 +100,26 @@ class DashboardController extends Controller
             && $allowedPlatformGroups->contains($requestedPlatformGroup)
                 ? $requestedPlatformGroup
                 : ($allowedPlatformGroups->contains('SEJOUR') ? 'SEJOUR' : 'PLATFORM');
+        $taskStatus = strtoupper((string) $request->input('task_status'));
+        $taskStatus = in_array($taskStatus, ['PENDING', 'COMPLETED'], true) ? $taskStatus : null;
+        $selectedPlatformId = (int) $request->input('platform_id');
+        $selectedPlatform = $platforms
+            ->whereIn('id', $allowedPlatformIds)
+            ->where('platform_group', $defaultPlatformGroup)
+            ->firstWhere('id', $selectedPlatformId);
+        $selectedPlatformId = $selectedPlatform?->id;
+
+        // Use the same active-period rule as Contract receipt follow-up.
+        $contracts = Contract::with(['hotel', 'season', 'tasks.platform'])
+            ->where('purchase_contract_received', true)
+            ->whereHas('season', fn ($season) => $season->current())
+            ->whereHas('tasks', function ($task) use ($taskStatus, $selectedPlatformId, $defaultPlatformGroup) {
+                $task->where('is_active', true)->where('assigned_user_id', auth()->id())
+                    ->whereHas('platform', fn ($platform) => $platform->where('platform_group', $defaultPlatformGroup)->orWhereNull('platform_group'))
+                    ->when($taskStatus, fn ($query) => $query->where('status', $taskStatus))
+                    ->when($selectedPlatformId, fn ($query) => $query->where('platform_id', $selectedPlatformId));
+            })
+            ->orderBy('season_id')->orderBy('hotel_id')->get();
         $sejourBundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'];
         $sejourBundlePlatformIds = $platforms
             ->where('platform_group', 'SEJOUR')
@@ -175,15 +189,25 @@ class DashboardController extends Controller
             preg_match_all('/\d{4}/', $contract->season->name, $years);
             return (int) (end($years[0]) ?: $contract->season->end_date->year);
         })->sortKeys();
-        return view('tasks.index', compact('contracts', 'platforms', 'allowedPlatformIds', 'hotels', 'seasons', 'seasonGroups', 'defaultPlatformGroup', 'toProgress'));
+        $filterPlatforms = $platforms->whereIn('id', $allowedPlatformIds)->where('platform_group', $defaultPlatformGroup);
+        return view('tasks.index', compact('contracts', 'platforms', 'allowedPlatformIds', 'hotels', 'seasons', 'seasonGroups', 'defaultPlatformGroup', 'toProgress', 'taskStatus', 'selectedPlatformId', 'filterPlatforms'));
     }
 
     public function exportMyTasks(Request $request)
     {
         abort_unless(auth()->user()->role === 'ENTRY_MANAGER', 403);
+        $taskStatus = strtoupper((string) $request->input('task_status'));
+        $taskStatus = in_array($taskStatus, ['PENDING', 'COMPLETED'], true) ? $taskStatus : null;
+        $selectedPlatformId = (int) $request->input('platform_id');
+        $platformGroup = strtoupper((string) $request->input('platform_group'));
+        $platformGroup = in_array($platformGroup, ['SEJOUR', 'PLATFORM'], true) ? $platformGroup : null;
+
         $tasks = ContractTask::with(['contract.hotel', 'contract.season', 'platform'])
             ->where('assigned_user_id', auth()->id())
             ->where('is_active', true)
+            ->when($taskStatus, fn ($query) => $query->where('status', $taskStatus))
+            ->when($selectedPlatformId, fn ($query) => $query->where('platform_id', $selectedPlatformId))
+            ->when($platformGroup, fn ($query) => $query->whereHas('platform', fn ($platform) => $platform->where('platform_group', $platformGroup)))
             ->whereHas('contract', fn ($contract) => $contract->where('purchase_contract_received', true)
                 ->whereHas('season', fn ($season) => $season->current())
                 ->when($request->filled('hotel'), fn ($query) => $query->whereHas('hotel', fn ($hotel) => $hotel->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->hotel).'%']))))

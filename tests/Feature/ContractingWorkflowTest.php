@@ -288,4 +288,28 @@ class ContractingWorkflowTest extends TestCase
             ->assertOk()
             ->assertDownload('my-task-status-'.now()->format('Y-m-d').'.xlsx');
     }
+
+    public function test_agent_can_filter_tasks_by_status_and_to(): void
+    {
+        $agent = User::factory()->create(['role' => 'ENTRY_MANAGER']);
+        $completedPlatform = Platform::create(['name' => 'Filter Completed TO', 'code' => 'FILTER_DONE', 'label' => 'FILTER DONE', 'platform_group' => 'PLATFORM']);
+        $pendingPlatform = Platform::create(['name' => 'Filter Pending TO', 'code' => 'FILTER_PENDING', 'label' => 'FILTER PENDING', 'platform_group' => 'PLATFORM']);
+        $completedPlatform->users()->attach($agent);
+        $pendingPlatform->users()->attach($agent);
+
+        $completedHotel = Hotel::create(['name' => 'Completed Filter Hotel']);
+        $pendingHotel = Hotel::create(['name' => 'Pending Filter Hotel']);
+        $completedSeason = Season::create(['hotel_id' => $completedHotel->id, 'name' => 'Completed Filter Season', 'code' => 'FILTER-DONE-S', 'contract_type' => 'SUMMER', 'start_date' => today(), 'end_date' => today()->addMonth(), 'active' => true]);
+        $pendingSeason = Season::create(['hotel_id' => $pendingHotel->id, 'name' => 'Pending Filter Season', 'code' => 'FILTER-PENDING-S', 'contract_type' => 'SUMMER', 'start_date' => today(), 'end_date' => today()->addMonth(), 'active' => true]);
+        $completedContract = Contract::create(['hotel_id' => $completedHotel->id, 'season_id' => $completedSeason->id, 'purchase_contract_received' => true, 'received_date' => now()]);
+        $pendingContract = Contract::create(['hotel_id' => $pendingHotel->id, 'season_id' => $pendingSeason->id, 'purchase_contract_received' => true, 'received_date' => now()]);
+        ContractTask::create(['contract_id' => $completedContract->id, 'platform_id' => $completedPlatform->id, 'assigned_user_id' => $agent->id, 'status' => 'COMPLETED']);
+        ContractTask::create(['contract_id' => $pendingContract->id, 'platform_id' => $pendingPlatform->id, 'assigned_user_id' => $agent->id, 'status' => 'PENDING']);
+
+        $this->actingAs($agent)
+            ->get(route('tasks.index', ['platform_group' => 'PLATFORM', 'task_status' => 'COMPLETED', 'platform_id' => $completedPlatform->id]))
+            ->assertOk()
+            ->assertSee('Completed Filter Season')
+            ->assertDontSee('Pending Filter Season');
+    }
 }

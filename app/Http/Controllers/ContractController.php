@@ -105,6 +105,15 @@ class ContractController extends Controller
             $query['platform_group'] = $platformGroup;
         }
 
+        $taskStatus = strtoupper((string) $request->input('task_status'));
+        if (in_array($taskStatus, ['PENDING', 'COMPLETED'], true)) {
+            $query['task_status'] = $taskStatus;
+        }
+
+        if ($request->filled('platform_id')) {
+            $query['platform_id'] = (int) $request->input('platform_id');
+        }
+
         return redirect()->route('tasks.index', $query);
     }
 

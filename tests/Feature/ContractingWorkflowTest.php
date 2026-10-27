@@ -106,6 +106,42 @@ class ContractingWorkflowTest extends TestCase
             ->assertSee('hotel-modal open', false);
     }
 
+    public function test_an_april_to_october_contract_is_summer(): void
+    {
+        $contracting = User::factory()->create(['role' => 'CONTRACTING']);
+
+        $this->actingAs($contracting)
+            ->post(route('contracting.hotels.store'), [
+                'name' => 'April Summer Validation Hotel',
+                'destination' => 'Hammamet',
+                'contract_type' => 'SUMMER',
+                'start_date' => '2027-04-01',
+                'end_date' => '2027-10-31',
+                'form_context' => 'hotel',
+            ])
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseHas('seasons', ['contract_type' => 'SUMMER', 'start_date' => '2027-04-01', 'end_date' => '2027-10-31']);
+    }
+
+    public function test_a_march_to_october_contract_must_be_year(): void
+    {
+        $contracting = User::factory()->create(['role' => 'CONTRACTING']);
+
+        $this->actingAs($contracting)
+            ->post(route('contracting.hotels.store'), [
+                'name' => 'Cross Season Validation Hotel',
+                'destination' => 'Hammamet',
+                'contract_type' => 'SUMMER',
+                'start_date' => '2027-03-23',
+                'end_date' => '2027-10-31',
+                'form_context' => 'hotel',
+            ])
+            ->assertSessionHasErrors('contract_type');
+
+        $this->assertDatabaseMissing('hotels', ['name' => 'Cross Season Validation Hotel']);
+    }
+
     public function test_a_hotel_can_be_added_again_after_its_previous_period_was_deleted(): void
     {
         $contracting = User::factory()->create(['role' => 'CONTRACTING']);

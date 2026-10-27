@@ -20,18 +20,21 @@ use Illuminate\Validation\ValidationException;
 class ContractingController extends Controller
 {
     /**
-     * Dates remain hotel-specific. This catches only unambiguous Winter,
-     * Summer, and near annual periods selected with the wrong type.
+     * The hotel contract calendar overlaps in April: Summer may begin on
+     * 01/04, while Winter ends on 30/04. A contract that begins before April
+     * and continues after April therefore covers both periods and is Year.
      */
     private function validateContractType(array $data): void
     {
         $startDate = Carbon::parse($data['start_date']);
         $endDate = Carbon::parse($data['end_date']);
-        $days = $startDate->diffInDays($endDate);
+        $summerStart = Carbon::create($endDate->year, 4, 1);
+        $winterEnd = Carbon::create($endDate->year, 4, 30);
+
         $expectedType = match (true) {
-            $days >= 300 => 'YEAR',
-            in_array($startDate->month, [11, 12, 1, 2, 3], true) => 'WINTER',
-            in_array($startDate->month, [4, 5, 6, 7, 8, 9, 10], true) => 'SUMMER',
+            $endDate->lte($winterEnd) => 'WINTER',
+            $startDate->lt($summerStart) && $endDate->gt($winterEnd) => 'YEAR',
+            default => 'SUMMER',
         };
 
         if ($expectedType !== null && $data['contract_type'] !== $expectedType) {

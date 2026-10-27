@@ -121,8 +121,7 @@
         <h2>Modify period</h2>
         <form method="POST" data-edit-period-form data-action-template="{{ url('/contracting/periods/__SEASON__') }}">
             @csrf @method('PATCH')
-            <label class="modal-field">Search hotel<input type="search" placeholder="Type a hotel name" autocomplete="off" data-edit-period-search></label>
-            <label class="modal-field">Period<select data-edit-period-select required><option value="">Select a period</option>@foreach($customPeriods as $period)<option value="{{ $period->id }}" data-hotel="{{ strtolower($period->hotel->name) }}" data-type="{{ $period->contract_type }}" data-start="{{ $period->start_date->format('Y-m-d') }}" data-end="{{ $period->end_date->format('Y-m-d') }}">{{ $period->hotel->name }} — {{ ucfirst(strtolower($period->contract_type)) }} ({{ $period->start_date->format('d/m/y') }} → {{ $period->end_date->format('d/m/y') }})</option>@endforeach</select></label>
+            <label class="modal-field">Period<select data-edit-period-select required><option value="">Select a period</option>@foreach($customPeriods as $period)<option value="{{ $period->id }}" data-type="{{ $period->contract_type }}" data-start="{{ $period->start_date->format('Y-m-d') }}" data-end="{{ $period->end_date->format('Y-m-d') }}">{{ $period->hotel->name }} — {{ ucfirst(strtolower($period->contract_type)) }} ({{ $period->start_date->format('d/m/y') }} → {{ $period->end_date->format('d/m/y') }})</option>@endforeach</select></label>
             <label class="modal-field">Contract type<select name="contract_type" data-edit-period-type required><option value="WINTER">Winter</option><option value="SUMMER">Summer</option><option value="YEAR">Year</option></select></label>
             <div class="modal-grid"><label>Start date<input name="start_date" data-edit-period-start type="date" required></label><label>End date<input name="end_date" data-edit-period-end type="date" required></label></div>
             <button class="button" type="submit">Save changes</button>
@@ -148,17 +147,13 @@ document.querySelector('[data-open-period]').onclick = () => periodModal.classLi
 document.querySelector('[data-close-period]').onclick = () => periodModal.classList.remove('open');
 document.querySelector('[data-open-delete-period]').onclick = () => deletePeriodModal.classList.add('open');
 document.querySelector('[data-close-delete-period]').onclick = () => deletePeriodModal.classList.remove('open');
-document.querySelector('[data-open-edit-period]').onclick = () => {
-    editPeriodModal.classList.add('open');
-    document.querySelector('[data-edit-period-search]').focus();
-};
+document.querySelector('[data-open-edit-period]').onclick = () => editPeriodModal.classList.add('open');
 document.querySelector('[data-close-edit-period]').onclick = () => editPeriodModal.classList.remove('open');
 modal.onclick = event => { if (event.target === modal) modal.classList.remove('open'); };
 periodModal.onclick = event => { if (event.target === periodModal) periodModal.classList.remove('open'); };
 deletePeriodModal.onclick = event => { if (event.target === deletePeriodModal) deletePeriodModal.classList.remove('open'); };
 editPeriodModal.onclick = event => { if (event.target === editPeriodModal) editPeriodModal.classList.remove('open'); };
 const editPeriodSelect = document.querySelector('[data-edit-period-select]');
-const editPeriodSearch = document.querySelector('[data-edit-period-search]');
 const deletePeriodSearch = document.querySelector('[data-delete-period-search]');
 deletePeriodSearch.oninput = () => {
     const search = deletePeriodSearch.value.trim().toLowerCase();
@@ -173,21 +168,6 @@ editPeriodSelect.onchange = () => {
     document.querySelector('[data-edit-period-type]').value = option.dataset.type || 'WINTER';
     document.querySelector('[data-edit-period-start]').value = option.dataset.start || '';
     document.querySelector('[data-edit-period-end]').value = option.dataset.end || '';
-};
-editPeriodSearch.oninput = () => {
-    const search = editPeriodSearch.value.trim().toLowerCase();
-    [...editPeriodSelect.options].forEach(option => {
-        if (!option.value) return;
-        option.hidden = !!search && !option.dataset.hotel.includes(search);
-    });
-
-    const selected = editPeriodSelect.options[editPeriodSelect.selectedIndex];
-    if (selected?.hidden) {
-        editPeriodSelect.value = '';
-        document.querySelector('[data-edit-period-type]').value = 'WINTER';
-        document.querySelector('[data-edit-period-start]').value = '';
-        document.querySelector('[data-edit-period-end]').value = '';
-    }
 };
 document.addEventListener('click', event => { if (!event.target.closest('.period-actions-menu')) periodActionsMenu.classList.remove('open'); });
 </script>

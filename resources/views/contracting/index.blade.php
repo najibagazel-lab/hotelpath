@@ -33,10 +33,10 @@
 
     <section class="employee-board contracting-board">
         <table>
-            <thead><tr><th>Hotel</th><th>Period</th><th>Contract type</th><th>Purchase contract received</th></tr></thead>
+            <thead><tr><th>Hotel</th><th>Period</th><th>Contract type</th><th>Purchase contract received</th><th>Note</th></tr></thead>
             <tbody>
                 @if($entries->isEmpty())
-                    <tr><td colspan="4" class="empty">No hotel found.</td></tr>
+                    <tr><td colspan="5" class="empty">No hotel found.</td></tr>
                 @else
                     @foreach($entries->groupBy('hotel.id') as $hotelEntries)
                         @foreach($hotelEntries as $entry)
@@ -56,6 +56,18 @@
                                         <input type="hidden" name="purchase_contract_received" value="{{ $entry->contract?->purchase_contract_received ? '0' : '1' }}">
                                         <button class="matrix-check {{ $entry->contract?->purchase_contract_received ? 'checked' : '' }}" aria-label="Toggle purchase contract received">{{ $entry->contract?->purchase_contract_received ? '✓' : '' }}</button>
                                     </form>
+                                    @endif
+                                </td>
+                                <td class="contract-note-cell">
+                                    @if($history)
+                                        <span class="contract-note-text">{{ $entry->contract?->notes }}</span>
+                                    @else
+                                        <form method="POST" action="{{ route('contracting.entries.note', [$entry->hotel, $entry->season]) }}" class="contract-note-form">
+                                            @csrf
+                                            @method('PATCH')
+                                            <textarea name="notes" rows="2" maxlength="1000" placeholder="Add a note for agents" aria-label="Note for {{ $entry->hotel->name }}">{{ $entry->contract?->notes }}</textarea>
+                                            <button type="submit">Save</button>
+                                        </form>
                                     @endif
                                 </td>
                             </tr>
@@ -131,6 +143,7 @@
 @endunless
 @endsection
 
+<style>.contract-note-cell{min-width:220px}.contract-note-form{display:flex;gap:6px;align-items:flex-start}.contract-note-form textarea{flex:1;min-width:0;padding:6px 8px;border:1px solid #dce6f1;border-radius:6px;font:inherit;font-size:13px;resize:vertical}.contract-note-form button{padding:6px 10px;border:0;border-radius:6px;background:#167b70;color:#fff;font-size:12px;font-weight:700;cursor:pointer}.contract-note-text{font-size:13px;white-space:pre-line}</style>
 @unless($history)
 <style>.matrix-check.checked{font-size:0}.matrix-check.checked::after{content:"\2713";font-size:15px}.received-summary{grid-template-columns:repeat(3,190px);justify-content:start;gap:10px;margin-bottom:14px}.received-summary article{min-height:0;padding:12px 14px;border-radius:9px}.received-summary strong{margin:9px 0 4px;font-size:31px}.received-summary small{font-size:13px}@media(max-width:700px){.received-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}</style>
 @push('scripts')

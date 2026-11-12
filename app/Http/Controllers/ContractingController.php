@@ -393,6 +393,43 @@ class ContractingController extends Controller
             : back()->with('success', $message);
     }
 
+    /**
+     * A note belongs to one hotel period. It can be written before the
+     * contract is received, so the contract row is created when needed.
+     */
+    public function updateNote(Request $request, Hotel $hotel, Season $season)
+    {
+        $this->authorizeContracting();
+        abort_unless($hotel->active && $season->active && ($season->hotel_id === null || $season->hotel_id === $hotel->id), 404);
+
+        $data = $request->validate(['notes' => 'nullable|string|max:1000']);
+        $notes = trim((string) ($data['notes'] ?? '')) ?: null;
+
+        $contract = Contract::firstOrNew(['hotel_id' => $hotel->id, 'season_id' => $season->id]);
+        if (! $contract->exists) {
+            $contract->fill([
+                'received_date' => today(),
+                'purchase_contract_received' => false,
+                'created_by' => auth()->id(),
+            ]);
+        }
+        $contract->notes = $notes;
+        $contract->save();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'contract_id' => $contract->id,
+            'action' => 'CONTRACTING_NOTE_UPDATED',
+            'details' => "{$hotel->name} — {$season->name}",
+        ]);
+
+        $message = $notes ? 'Note saved.' : 'Note removed.';
+
+        return $request->expectsJson()
+            ? response()->json(['message' => $message, 'notes' => $notes])
+            : back()->with('success', $message);
+    }
+
     public function stats(Request $request)
     {
         $this->authorizeContracting();

@@ -312,4 +312,33 @@ class ContractingWorkflowTest extends TestCase
             ->assertSee('Completed Filter Season')
             ->assertDontSee('Pending Filter Season');
     }
+
+    public function test_contracting_note_is_saved_and_shown_to_the_assigned_agent(): void
+    {
+        $contracting = User::factory()->create(['role' => 'CONTRACTING']);
+        $agent = User::factory()->create(['role' => 'ENTRY_MANAGER']);
+        $hotel = Hotel::create(['name' => 'Hotel With Note', 'active' => true]);
+        $season = Season::create(['hotel_id' => $hotel->id, 'contract_type' => 'SUMMER', 'name' => 'Summer note', 'code' => 'NOTE-S', 'start_date' => today(), 'end_date' => today()->addMonth(), 'active' => true]);
+        $platform = Platform::create(['name' => 'Note TO', 'code' => 'NOTE_TO', 'label' => 'NOTE', 'platform_group' => 'PLATFORM']);
+        $platform->users()->attach($agent);
+
+        // A note can be written before the contract is received.
+        $this->actingAs($contracting)
+            ->patch(route('contracting.entries.note', [$hotel, $season]), ['notes' => 'Child policy changed'])
+            ->assertSessionHas('success');
+        $contract = Contract::where('hotel_id', $hotel->id)->where('season_id', $season->id)->firstOrFail();
+        $this->assertSame('Child policy changed', $contract->notes);
+        $this->assertFalse($contract->purchase_contract_received);
+        $this->actingAs($contracting)->get(route('contracting.index'))->assertSee('Child policy changed');
+
+        $contract->update(['purchase_contract_received' => true]);
+        ContractTask::create(['contract_id' => $contract->id, 'platform_id' => $platform->id, 'assigned_user_id' => $agent->id, 'is_active' => true]);
+        $this->actingAs($agent)->get(route('tasks.index', ['platform_group' => 'PLATFORM']))->assertOk()->assertSee('Child policy changed');
+
+        // Agents cannot edit notes.
+        $this->actingAs($agent)->patch(route('contracting.entries.note', [$hotel, $season]), ['notes' => 'x'])->assertForbidden();
+
+        $this->actingAs($contracting)->patch(route('contracting.entries.note', [$hotel, $season]), ['notes' => '  ']);
+        $this->assertNull($contract->fresh()->notes);
+    }
 }

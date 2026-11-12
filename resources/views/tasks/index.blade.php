@@ -19,7 +19,7 @@
                             @if($loop->first)<td rowspan="{{ $hotelContracts->count() }}" class="grouped-hotel-name">{{ $contract->hotel->name }}</td>@endif
                             @php(preg_match('/^(Winter|Summer|Year)/i', $contract->season->name, $seasonMatch))
                             @php($seasonType = $contract->season->contract_type ?? strtoupper($seasonMatch[1] ?? 'PERIOD'))
-                            <td class="task-season season-{{ strtolower($seasonType) }}"><b>{{ ucfirst(strtolower($seasonType)) }}</b><small>{{ $contract->season->start_date->format('d/m/y') }} &rarr; {{ $contract->season->end_date->format('d/m/y') }}</small></td>
+                            <td class="task-season season-{{ strtolower($seasonType) }}"><b>{{ ucfirst(strtolower($seasonType)) }}</b><small>{{ $contract->season->start_date->format('d/m/y') }} &rarr; {{ $contract->season->end_date->format('d/m/y') }}</small>@if($contract->notes)<span class="agent-contract-note" title="Note from Contracting">&#128221; {{ $contract->notes }}</span>@endif</td>
                             @foreach($platformGroups as $group => $groupPlatforms)
                             @foreach($groupPlatforms as $platform)
                                 @if($group !== 'SEJOUR' || !in_array($platform->label, $sejourBundleLabels))
@@ -76,7 +76,7 @@
 /* Keep the two fixed headings on the same first header line as “Sejour”. */
 .grouped-platform-board .hotel-column,.grouped-platform-board .season-column{vertical-align:top;padding-top:15px;text-align:center}.grouped-platform-board .hotel-column{padding-left:0}
 .grouped-platform-board td.task-season{text-align:center}
-.grouped-platform-board td.task-season{padding-left:8px;padding-right:8px}.grouped-platform-board .task-season small{white-space:nowrap}
+.grouped-platform-board td.task-season{padding-left:8px;padding-right:8px}.grouped-platform-board .task-season small{white-space:nowrap}.grouped-platform-board .agent-contract-note{display:block;max-width:190px;margin:6px auto 0;padding:4px 6px;border-radius:5px;background:#fff7e0;color:#6b4e00;font-size:11px;font-weight:600;text-align:left;white-space:pre-line}
 .grouped-platform-board thead tr:nth-child(2) th:first-child{border-left:2px solid #dce6f1}
 </style>
 <style>

@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/contracting/periods/{season}', [ContractingController::class, 'updatePeriod'])->name('contracting.periods.update');
     Route::delete('/contracting/periods/{season}', [ContractingController::class, 'destroyPeriod'])->name('contracting.periods.destroy');
     Route::patch('/contracting/{hotel}/{season}', [ContractingController::class, 'updateEntry'])->name('contracting.entries.update');
+    Route::patch('/contracting/{hotel}/{season}/note', [ContractingController::class, 'updateNote'])->name('contracting.entries.note');
     Route::get('/contracting-suivi', [ContractingController::class, 'stats'])->name('contracting.stats');
     Route::prefix('api')->group(function () {
         Route::get('/contracting/entries', [ContractingController::class, 'entries']);

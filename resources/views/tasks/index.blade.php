@@ -24,7 +24,7 @@
                             @foreach($groupPlatforms as $platform)
                                 @if($group !== 'SEJOUR' || !in_array($platform->label, $sejourBundleLabels))
                                 @php($task = $contract->tasks->where('is_active', true)->firstWhere('platform_id', $platform->id))
-                                @php($allowed = in_array($platform->id, $allowedPlatformIds) && $task && $task->assigned_user_id === auth()->id())
+                                @php($allowed = in_array($platform->id, $allowedPlatformIds) && $task)
                                 <td class="employee-check" data-platform-group="{{ $group }}">
                                     @if($task && $allowed)
                                         <form method="POST" action="{{ route('tasks.update', $task) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="{{ $task->status === 'COMPLETED' ? 'PENDING' : 'COMPLETED' }}"><input type="hidden" name="hotel" class="task-filter-context" value="{{ request('hotel') }}"><input type="hidden" name="platform_group" class="task-platform-context" value="{{ $defaultPlatformGroup }}"><input type="hidden" name="task_status" value="{{ $taskStatus }}"><input type="hidden" name="platform_id" value="{{ $selectedPlatformId }}"><button class="matrix-check {{ $task->status === 'COMPLETED' ? 'checked' : '' }}" aria-label="Update {{ $platform->name }}">{{ $task->status === 'COMPLETED' ? '✓' : '' }}</button></form>
@@ -37,7 +37,7 @@
                                 @elseif($platform->label === 'DNA')
                                     @php($bundlePlatforms = $groupPlatforms->filter(fn ($item) => in_array($item->label, $sejourBundleLabels)))
                                     @php($bundleTasks = $contract->tasks->where('is_active', true)->whereIn('platform_id', $bundlePlatforms->pluck('id')))
-                                    @php($bundleAllowed = $bundlePlatforms->count() === count($sejourBundleLabels) && $bundleTasks->count() === count($sejourBundleLabels) && $bundleTasks->every(fn ($task) => $task->assigned_user_id === auth()->id()))
+                                    @php($bundleAllowed = $bundlePlatforms->count() === count($sejourBundleLabels) && $bundleTasks->count() === count($sejourBundleLabels) && $bundleTasks->every(fn ($task) => in_array($task->platform_id, $allowedPlatformIds)))
                                     @php($bundleCompleted = $bundleTasks->count() === count($sejourBundleLabels) && $bundleTasks->every(fn ($task) => $task->status === 'COMPLETED'))
                                     <td class="employee-check sejour-bundle-check" data-platform-group="SEJOUR" colspan="{{ count($sejourBundleLabels) }}">
                                         @if($bundleAllowed)

@@ -113,8 +113,8 @@ class DashboardController extends Controller
         $contracts = Contract::with(['hotel', 'season', 'tasks.platform'])
             ->where('purchase_contract_received', true)
             ->whereHas('season', fn ($season) => $season->current())
-            ->whereHas('tasks', function ($task) use ($taskStatus, $selectedPlatformId, $defaultPlatformGroup) {
-                $task->where('is_active', true)->where('assigned_user_id', auth()->id())
+            ->whereHas('tasks', function ($task) use ($taskStatus, $selectedPlatformId, $defaultPlatformGroup, $allowedPlatformIds) {
+                $task->where('is_active', true)->whereIn('platform_id', $allowedPlatformIds)
                     ->whereHas('platform', fn ($platform) => $platform->where('platform_group', $defaultPlatformGroup)->orWhereNull('platform_group'))
                     ->when($taskStatus, fn ($query) => $query->where('status', $taskStatus))
                     ->when($selectedPlatformId, fn ($query) => $query->where('platform_id', $selectedPlatformId));
@@ -126,9 +126,10 @@ class DashboardController extends Controller
             ->filter(fn ($platform) => in_array($platform->label ?? $platform->name, $sejourBundleLabels, true))
             ->pluck('id');
 
+        // Progress is per TO (all received contracts of that TO), not per assignee,
+        // so two agents sharing a TO see the same figures.
         $toProgress = $platforms->whereIn('id', $allowedPlatformIds)->map(function ($platform) {
             $tasks = ContractTask::where('platform_id', $platform->id)->where('is_active', true)
-                ->where('assigned_user_id', auth()->id())
                 ->whereHas('contract', fn ($contract) => $contract
                     ->where('purchase_contract_received', true)
                     ->whereHas('season', fn ($season) => $season->current()));
@@ -151,12 +152,12 @@ class DashboardController extends Controller
         $sejourBundleProgress = collect([
             ['types' => ['WINTER', 'YEAR'], 'received' => 'winterReceived', 'entered' => 'winterEntered'],
             ['types' => ['SUMMER', 'YEAR'], 'received' => 'summerReceived', 'entered' => 'summerEntered'],
-        ])->reduce(function ($progress, $definition) use ($contracts, $sejourBundlePlatformIds) {
+        ])->reduce(function ($progress, $definition) use ($contracts, $sejourBundlePlatformIds, $allowedPlatformIds) {
             $bundleContracts = $contracts
                 ->filter(fn ($contract) => in_array($contract->season->contract_type, $definition['types'], true))
                 ->filter(fn ($contract) => $contract->tasks->where('is_active', true)
                     ->whereIn('platform_id', $sejourBundlePlatformIds)
-                    ->contains(fn ($task) => $task->assigned_user_id === auth()->id()));
+                    ->contains(fn ($task) => in_array($task->platform_id, $allowedPlatformIds)));
 
             $progress->{$definition['received']} = $bundleContracts->count();
             $progress->{$definition['entered']} = $bundleContracts->filter(function ($contract) use ($sejourBundlePlatformIds) {
@@ -203,7 +204,7 @@ class DashboardController extends Controller
         $platformGroup = in_array($platformGroup, ['SEJOUR', 'PLATFORM'], true) ? $platformGroup : null;
 
         $tasks = ContractTask::with(['contract.hotel', 'contract.season', 'platform'])
-            ->where('assigned_user_id', auth()->id())
+            ->whereIn('platform_id', auth()->user()->platforms()->pluck('platforms.id'))
             ->where('is_active', true)
             ->when($taskStatus, fn ($query) => $query->where('status', $taskStatus))
             ->when($selectedPlatformId, fn ($query) => $query->where('platform_id', $selectedPlatformId))

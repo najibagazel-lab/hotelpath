@@ -37,9 +37,8 @@ class ContractController extends Controller
         return redirect()->route('tasks.index')->with('success','Hotel added. Tasks are now available for assigned platforms.');
     }
     public function updateTask(Request $request, ContractTask $task){
-        // Même un administrateur ne coche pas à la place d'un responsable :
-        // la traçabilité reste donc fiable et chaque tâche est personnelle.
-        abort_unless($task->is_active && $task->assigned_user_id === auth()->id(), 403);
+        // Tout agent ayant accès au TO peut saisir ; completed_by garde la traçabilité.
+        abort_unless($task->is_active && auth()->user()->platforms()->where('platforms.id', $task->platform_id)->exists(), 403);
         $status=$request->validate(['status'=>'required|in:PENDING,IN_PROGRESS,COMPLETED,BLOCKED'])['status'];
         $task->update(['status'=>$status,'completed_at'=>$status==='COMPLETED'?now():null,'completed_by'=>$status==='COMPLETED'?auth()->id():null]);
         ActivityLog::create(['user_id'=>auth()->id(),'contract_id'=>$task->contract_id,'platform_id'=>$task->platform_id,'action'=>'STATUT_MODIFIE','details'=>"Statut défini sur {$status}"]);
@@ -53,10 +52,11 @@ class ContractController extends Controller
     {
         $bundleLabels = ['DNA', 'JMT', 'PEAK', 'SUN', 'SUNQUEST'];
         $contract = $task->contract;
+        $allowedPlatformIds = auth()->user()->platforms()->pluck('platforms.id');
 
         abort_unless(
             $task->is_active
-            && $task->assigned_user_id === auth()->id()
+            && $allowedPlatformIds->contains($task->platform_id)
             && $task->platform->platform_group === 'SEJOUR'
             && in_array($task->platform->label, $bundleLabels),
             403
@@ -65,13 +65,13 @@ class ContractController extends Controller
         $tasks = ContractTask::query()
             ->where('contract_id', $contract->id)
             ->where('is_active', true)
-            ->where('assigned_user_id', auth()->id())
+            ->whereIn('platform_id', $allowedPlatformIds)
             ->whereHas('platform', fn ($platform) => $platform
                 ->where('platform_group', 'SEJOUR')
                 ->whereIn('label', $bundleLabels))
             ->get();
 
-        // An agent can update the bundle only when all five tasks are theirs.
+        // An agent can update the bundle only with access to all five TOs.
         abort_unless($tasks->count() === count($bundleLabels), 403);
 
         $markCompleted = $tasks->contains(fn ($task) => $task->status !== 'COMPLETED');

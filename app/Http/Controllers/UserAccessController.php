@@ -47,12 +47,12 @@ class UserAccessController extends Controller
         // An access change also assigns existing contract tasks. Otherwise the
         // checkbox would remain locked even though the employee has the access.
         $selectedPlatformIds = $user->role === 'ENTRY_MANAGER' ? $selectedPlatformIds : [];
-        if ($selectedPlatformIds) {
-            ContractTask::whereIn('platform_id', $selectedPlatformIds)->update(['assigned_user_id' => $user->id]);
-        }
+        $this->claimOrphanTasks($user, $selectedPlatformIds);
         $removedPlatformIds = array_diff($previousPlatformIds, $selectedPlatformIds);
-        if ($removedPlatformIds) {
-            ContractTask::where('assigned_user_id', $user->id)->whereIn('platform_id', $removedPlatformIds)->update(['assigned_user_id' => null]);
+        foreach ($removedPlatformIds as $platformId) {
+            // Hand the tasks back to another agent who still has this TO.
+            $nextOwner = Platform::find($platformId)?->users()->where('active', true)->where('users.id', '!=', $user->id)->first();
+            ContractTask::where('assigned_user_id', $user->id)->where('platform_id', $platformId)->update(['assigned_user_id' => $nextOwner?->id]);
         }
         if (! empty($data['password'])) {
             $user->update(['password' => Hash::make($data['password'])]);
@@ -76,9 +76,24 @@ class UserAccessController extends Controller
         $selectedPlatformIds = $this->selectedPlatformIds($request, $data);
         $user = User::create(['name' => $data['name'], 'username' => $data['username'], 'email' => $data['username'].'@beslimetravel.local', 'password' => Hash::make($data['password']), 'role' => $data['role'], 'active' => true]);
         $user->platforms()->sync($data['role'] === 'ENTRY_MANAGER' ? $selectedPlatformIds : []);
-        if ($data['role'] === 'ENTRY_MANAGER' && ! empty($selectedPlatformIds)) {
-            ContractTask::whereIn('platform_id', $selectedPlatformIds)->update(['assigned_user_id' => $user->id]);
+        if ($data['role'] === 'ENTRY_MANAGER') {
+            $this->claimOrphanTasks($user, $selectedPlatformIds);
         }
         return back()->with('success', "Employee {$user->name} was added.");
+    }
+
+    /**
+     * Give the user the tasks of these TOs that have no valid owner (unassigned,
+     * or assigned to someone who no longer has the TO). Tasks already owned by
+     * another agent with access are never taken over.
+     */
+    private function claimOrphanTasks(User $user, array $platformIds): void
+    {
+        foreach ($platformIds as $platformId) {
+            $ownerIds = Platform::find($platformId)?->users()->where('active', true)->pluck('users.id')->all() ?? [];
+            ContractTask::where('platform_id', $platformId)
+                ->where(fn ($query) => $query->whereNull('assigned_user_id')->orWhereNotIn('assigned_user_id', $ownerIds))
+                ->update(['assigned_user_id' => $user->id]);
+        }
     }
 }

@@ -96,15 +96,20 @@ class DashboardController extends Controller
         $allowedPlatformIds = auth()->user()->platforms()->pluck('platforms.id')->all();
         $allowedPlatformGroups = $platforms->whereIn('id', $allowedPlatformIds)->pluck('platform_group');
         $requestedPlatformGroup = strtoupper((string) $request->input('platform_group'));
+        // Any agent can open both tabs. A tab without access is read-only:
+        // it shows every TO of that group, and checkboxes stay locked.
         $defaultPlatformGroup = in_array($requestedPlatformGroup, ['SEJOUR', 'PLATFORM'], true)
-            && $allowedPlatformGroups->contains($requestedPlatformGroup)
                 ? $requestedPlatformGroup
                 : ($allowedPlatformGroups->contains('SEJOUR') ? 'SEJOUR' : 'PLATFORM');
+        $readOnlyGroup = ! $allowedPlatformGroups->contains($defaultPlatformGroup);
+        $visiblePlatformIds = $readOnlyGroup
+            ? $platforms->where('platform_group', $defaultPlatformGroup)->pluck('id')->all()
+            : $allowedPlatformIds;
         $taskStatus = strtoupper((string) $request->input('task_status'));
         $taskStatus = in_array($taskStatus, ['PENDING', 'COMPLETED'], true) ? $taskStatus : null;
         $selectedPlatformId = (int) $request->input('platform_id');
         $selectedPlatform = $platforms
-            ->whereIn('id', $allowedPlatformIds)
+            ->whereIn('id', $visiblePlatformIds)
             ->where('platform_group', $defaultPlatformGroup)
             ->firstWhere('id', $selectedPlatformId);
         $selectedPlatformId = $selectedPlatform?->id;
@@ -113,8 +118,8 @@ class DashboardController extends Controller
         $contracts = Contract::with(['hotel', 'season', 'tasks.platform'])
             ->where('purchase_contract_received', true)
             ->whereHas('season', fn ($season) => $season->current())
-            ->whereHas('tasks', function ($task) use ($taskStatus, $selectedPlatformId, $defaultPlatformGroup, $allowedPlatformIds) {
-                $task->where('is_active', true)->whereIn('platform_id', $allowedPlatformIds)
+            ->whereHas('tasks', function ($task) use ($taskStatus, $selectedPlatformId, $defaultPlatformGroup, $visiblePlatformIds) {
+                $task->where('is_active', true)->whereIn('platform_id', $visiblePlatformIds)
                     ->whereHas('platform', fn ($platform) => $platform->where('platform_group', $defaultPlatformGroup)->orWhereNull('platform_group'))
                     ->when($taskStatus, fn ($query) => $query->where('status', $taskStatus))
                     ->when($selectedPlatformId, fn ($query) => $query->where('platform_id', $selectedPlatformId));
@@ -128,7 +133,7 @@ class DashboardController extends Controller
 
         // Progress is per TO (all received contracts of that TO), not per assignee,
         // so two agents sharing a TO see the same figures.
-        $toProgress = $platforms->whereIn('id', $allowedPlatformIds)->map(function ($platform) {
+        $toProgress = $platforms->whereIn('id', $visiblePlatformIds)->map(function ($platform) {
             $tasks = ContractTask::where('platform_id', $platform->id)->where('is_active', true)
                 ->whereHas('contract', fn ($contract) => $contract
                     ->where('purchase_contract_received', true)
@@ -152,12 +157,12 @@ class DashboardController extends Controller
         $sejourBundleProgress = collect([
             ['types' => ['WINTER', 'YEAR'], 'received' => 'winterReceived', 'entered' => 'winterEntered'],
             ['types' => ['SUMMER', 'YEAR'], 'received' => 'summerReceived', 'entered' => 'summerEntered'],
-        ])->reduce(function ($progress, $definition) use ($contracts, $sejourBundlePlatformIds, $allowedPlatformIds) {
+        ])->reduce(function ($progress, $definition) use ($contracts, $sejourBundlePlatformIds, $visiblePlatformIds) {
             $bundleContracts = $contracts
                 ->filter(fn ($contract) => in_array($contract->season->contract_type, $definition['types'], true))
                 ->filter(fn ($contract) => $contract->tasks->where('is_active', true)
                     ->whereIn('platform_id', $sejourBundlePlatformIds)
-                    ->contains(fn ($task) => in_array($task->platform_id, $allowedPlatformIds)));
+                    ->contains(fn ($task) => in_array($task->platform_id, $visiblePlatformIds)));
 
             $progress->{$definition['received']} = $bundleContracts->count();
             $progress->{$definition['entered']} = $bundleContracts->filter(function ($contract) use ($sejourBundlePlatformIds) {
@@ -190,8 +195,8 @@ class DashboardController extends Controller
             preg_match_all('/\d{4}/', $contract->season->name, $years);
             return (int) (end($years[0]) ?: $contract->season->end_date->year);
         })->sortKeys();
-        $filterPlatforms = $platforms->whereIn('id', $allowedPlatformIds)->where('platform_group', $defaultPlatformGroup);
-        return view('tasks.index', compact('contracts', 'platforms', 'allowedPlatformIds', 'hotels', 'seasons', 'seasonGroups', 'defaultPlatformGroup', 'toProgress', 'taskStatus', 'selectedPlatformId', 'filterPlatforms'));
+        $filterPlatforms = $platforms->whereIn('id', $visiblePlatformIds)->where('platform_group', $defaultPlatformGroup);
+        return view('tasks.index', compact('contracts', 'platforms', 'allowedPlatformIds', 'hotels', 'seasons', 'seasonGroups', 'defaultPlatformGroup', 'toProgress', 'taskStatus', 'selectedPlatformId', 'filterPlatforms', 'readOnlyGroup'));
     }
 
     public function exportMyTasks(Request $request)
